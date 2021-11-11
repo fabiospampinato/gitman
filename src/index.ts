@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {GitHub, Local} from './providers';
-import {IFilter} from './types';
+import {IFilter, ILocalRepo} from './types';
 
 /* MAIN */
 
@@ -19,6 +19,12 @@ const GitMan = {
   cloneAll: async ( username: string, filter?: IFilter ): Promise<void> => {
 
     return GitHub.repos.clone ( username, filter );
+
+  },
+
+  get: async ( filter?: IFilter ): Promise<ILocalRepo[]> => {
+
+    return Local.repos.getAll ( filter );
 
   },
 
