@@ -1,0 +1,55 @@
+{
+  "name": "@fabiospampinato/gitman",
+  "displayName": "gitman",
+  "description": "A simple yet powerful opinionated tool for managing GitHub repositories.",
+  "version": "1.0.0",
+  "bin": "dist/src/index.js",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "compile": "tsc --skipLibCheck && tstei",
+    "compile:watch": "tsc --skipLibCheck --watch",
+    "prepublishOnly": "npm run clean && npm run compile"
+  },
+  "bugs": {
+    "url": "https://github.com/fabiospampinato/gitman/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Fabio Spampinato",
+    "email": "spampinabio@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fabiospampinato/gitman.git"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "man",
+    "manager",
+    "automation",
+    "multiple",
+    "bulk",
+    "shell",
+    "cli",
+    "terminal",
+    "app"
+  ],
+  "dependencies": {
+    "@octokit/core": "^3.5.1",
+    "cli-truncate": "^2.1.0",
+    "cli-width": "^3.0.0",
+    "lodash": "^4.17.21",
+    "micromatch": "^4.0.4",
+    "specialist": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.176",
+    "@types/micromatch": "^4.0.2",
+    "@types/node": "^16.11.7",
+    "typescript": "^4.4.4",
+    "typescript-transform-export-interop": "^1.0.4"
+  }
+}
