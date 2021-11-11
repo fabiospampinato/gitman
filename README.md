@@ -126,6 +126,7 @@ gitman sh 'git fetch && echo "Something"'
 
 ## Related
 
+- **[GitMan for VSCode](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-gitman)**: The official companion extension for vscode, for switching to repositories quickly.
 - **[Autogit](https://github.com/fabiospampinato/autogit)**: Another similar tool I wrote, which is extendable but much less convenient to set up.
 - **[Projects+](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-projects-plus)**: A VSCode extension I wrote for switching quickly between projects, it requires some manual configuration though.
 
