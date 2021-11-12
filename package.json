@@ -38,11 +38,11 @@
     "app"
   ],
   "dependencies": {
-    "@octokit/core": "^3.5.1",
     "cli-truncate": "^2.1.0",
     "cli-width": "^3.0.0",
     "micromatch": "^4.0.4",
     "specialist": "^0.4.0"
+    "node-fetch": "^2.6.6",
   },
   "devDependencies": {
     "@types/micromatch": "^4.0.2",

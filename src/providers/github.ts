@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import {Octokit} from '@octokit/core';
+import fetch from 'node-fetch';
 import micromatch from 'micromatch';
 import {color} from 'specialist';
 import {displayName, version} from '../../package.json';
-import {GITHUB_REPOS_PER_PAGE, GITHUB_REPOS_SORT_DIMENSION, GITHUB_REPOS_SORT_DIRECTION, GITHUB_REPOS_TYPE} from '../constants';
+import {GITHUB_DOMAIN, GITHUB_REPOS_PER_PAGE, GITHUB_REPOS_SORT_DIMENSION, GITHUB_REPOS_SORT_DIRECTION, GITHUB_REPOS_TYPE} from '../constants';
 import Env from '../env';
 import Symbols from '../symbols';
 import Utils from '../utils';
@@ -16,14 +16,7 @@ import Local from './local'
 
 const GitHub = {
 
-  /* STATE */
-
-  octokit: new Octokit ({
-    auth: Env.GITHUB_TOKEN,
-    userAgent: `${displayName}/v${version}`
-  }),
-
-  /* API */
+  /* REPO API */
 
   repo: {
 
@@ -68,6 +61,8 @@ const GitHub = {
     }
 
   },
+
+  /* REPOS API */
 
   repos: {
 
@@ -130,18 +125,11 @@ const GitHub = {
 
     getPage: async ( username: string, page: number ): Promise<IGitHubRepo[]> => {
 
-      const endpoint = Env.GITHUB_TOKEN ? '/user/repos' : '/users/{username}/repos';
+      const endpoint = Env.GITHUB_TOKEN ? '/user/repos' : `/users/${username}/repos`;
+      const url = `https://api.${GITHUB_DOMAIN}${endpoint}?page=${page}&per_page=${GITHUB_REPOS_PER_PAGE}&sort=${GITHUB_REPOS_SORT_DIMENSION}&direction=${GITHUB_REPOS_SORT_DIRECTION}&type=${GITHUB_REPOS_TYPE}`;
+      const repos = await GitHub.rest.fetch ( url );
 
-      const {data} = await GitHub.octokit.request ( `GET ${endpoint}`, {
-        username,
-        page,
-        per_page: GITHUB_REPOS_PER_PAGE,
-        sort: GITHUB_REPOS_SORT_DIMENSION,
-        direction: GITHUB_REPOS_SORT_DIRECTION,
-        type: GITHUB_REPOS_TYPE
-      });
-
-      return data.map ( GitHub.repo.parse );
+      return repos.map ( GitHub.repo.parse );
 
     },
 
@@ -169,6 +157,28 @@ const GitHub = {
         }
 
       }
+
+    }
+
+  },
+
+  /* REST API */
+
+  rest: {
+
+    fetch: async ( url: string ): Promise<any> => {
+
+      const response = await fetch ( url, {
+        headers: {
+          Accept : 'application/vnd.github.v3+json',
+          Authorization: `token ${Env.GITHUB_TOKEN}`,
+          'User-Agent': `${displayName}/v${version}`
+        }}
+      );
+
+      const data = await response.json ();
+
+      return data;
 
     }
 
