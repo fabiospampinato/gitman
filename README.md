@@ -10,6 +10,7 @@ A simple yet powerful opinionated tool for managing GitHub repositories.
 
 - **Simple**: There's almost nothing to configure and very few commands are provided.
 - **Powerful**: It allows you to clone in bulk repositories easily and execute commands on them.
+- **Tiny**: The entire thing is ~40kb min+gzipped, and only dependencies I personally either maintain or trust are used.
 - **Beautiful**: All of its power derives from being opinioned about the folder structure where repositories are cloned.
 
 ## Install
@@ -95,6 +96,12 @@ List all locally cloned repositories as JSON, useful for third-party tools integ
 gitman ls --json
 ```
 
+List minimal data about all locally cloned repositories as JSON, this is much quicker but omits git-specific data:
+
+```
+gitman ls --json --minimal
+```
+
 List all remote repositories available on GitHub for a user/org:
 
 ```
@@ -123,7 +130,6 @@ gitman sh 'git fetch && echo "Something"'
 
 - The `include` glob is matched against the full repository identifier (e.g. username/reponame), therefor most of the times your glob should probably look something like this: `**/foo-*`.
 - GitMan will generally output nothing (except in `--json` mode) if there are no targeted repositories for your command (i.e. user with no repositories, no locally cloned repositories, using filters that exclude everything etc.).
-- GitMan is currently focused on simplicity, not necessarily performance, everything is executed serially for now, a major performance boost could be had in the future by executing stuff in parallel for all targeted repositories.
 
 ## Related
 
