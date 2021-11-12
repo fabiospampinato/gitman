@@ -56,13 +56,15 @@ const Local = {
 
     exec: ( repoPath: string, command: string ): string => {
 
-      const result = spawnSync ( command, {
+      const {status, stderr, stdout} = spawnSync ( command, {
         cwd: repoPath,
         encoding: 'utf-8',
         shell: true
-      })
+      });
 
-      return result.stdout.trim ();
+      if ( status !== 0 ) throw stderr.trim ();
+
+      return stdout.trim ();
 
     },
 
