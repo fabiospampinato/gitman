@@ -44,9 +44,15 @@ const Local = {
 
         } catch ( error: unknown ) {
 
+          const stderr = `${error}`;
+
           console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Failed to clone!` );
 
-          console.log ( error );
+          if ( stderr ) {
+
+            console.log ( color.dim ( stderr ) );
+
+          }
 
         }
 
@@ -305,7 +311,11 @@ const Local = {
 
           console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-          console.log ( color.dim ( stdout ) );
+          if ( stdout ) {
+
+            console.log ( color.dim ( stdout ) );
+
+          }
 
         } catch ( error: unknown ) {
 
@@ -313,7 +323,11 @@ const Local = {
 
           console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-          console.log ( color.dim ( stderr ) );
+          if ( stderr ) {
+
+            console.log ( color.dim ( stderr ) );
+
+          }
 
         }
 
