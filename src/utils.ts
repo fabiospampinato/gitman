@@ -94,13 +94,15 @@ const Utils = {
 
   },
 
-  fetch: ( options: { url: string, headers?: Record<string, string> } ): Promise<any> => {
+  fetch: ( options: { method: string, url: string, body?: string, headers?: Record<string, string> } ): Promise<any> => {
 
     return new Promise ( ( resolve, reject ) => {
 
       get.concat ( options, ( error, response, data ) => {
 
         if ( error ) return reject ( error );
+
+        if ( !/^2\d\d$/.test ( `${response.statusCode}` ) ) return reject ( data.toString () );
 
         return resolve ( JSON.parse ( data.toString () ) );
 

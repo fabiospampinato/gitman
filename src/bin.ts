@@ -69,6 +69,26 @@ program
   });
 
 program
+  .command ( 'publish' )
+  .description ( 'Publish a local repository to GitHub' )
+  .option ( '--no-archived', 'Ignore archived repositories' )
+  .option ( '--no-forks', 'Ignore forked repositories' )
+  .option ( '--no-private', 'Ignore private repositories' )
+  .option ( '--no-public', 'Ignore public repositories' )
+  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
+  .arguments ( '<repository>' )
+  .action ( async ( argument, options ) => {
+    const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+|\*)$/i.exec ( argument );
+    if ( !match ) throw new Error ( 'Repository excepted in the "username/repository" format' );
+    if ( match[2] === '*' ) {
+      await GitMan.publishAll ( match[1], Utils.bin.makeFilter ( options ) );
+    } else {
+      await GitMan.publish ( match[1], match[2] );
+    }
+    process.exit ( 0 );
+  });
+
+program
   .command ( 'sh' )
   .description ( 'Execute a shell command in all known repositories' )
   .option ( '--no-archived', 'Ignore archived repositories' )

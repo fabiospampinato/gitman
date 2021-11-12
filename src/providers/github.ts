@@ -21,9 +21,29 @@ const GitHub = {
 
     clone: async ( username: string, name: string ): Promise<void> => {
 
-      const endpoint = `https://github.com/${username}/${name}.git`;
+      const endpoint = GitHub.repo.getEndpoint ( username, name );
 
       await Local.repo.clone ( username, name, endpoint );
+
+    },
+
+    get: async ( username: string, name: string ): Promise<IGitHubRepo | undefined> => {
+
+      try {
+
+        const url = `https://api.${GITHUB_DOMAIN}/repos/${username}/${name}`;
+        const repoRaw = await GitHub.rest.fetch ( 'GET', url );
+        const repo = GitHub.repo.parse ( repoRaw );
+
+        return repo;
+
+      } catch {}
+
+    },
+
+    getEndpoint: ( username: string, name: string ): string => {
+
+      return `https://${GITHUB_DOMAIN}/${username}/${name}.git`;
 
     },
 
@@ -56,6 +76,61 @@ const GitHub = {
           updated: new Date ( repo.updated_at )
         }
       };
+
+    },
+
+    publish: async ( username: string, name: string ): Promise<void> => {
+
+      const local = await Local.repo.get ( username, name, true );
+      const remote = await GitHub.repo.get ( username, name );
+
+      //TODO: Refuse to publish if private
+
+      if ( remote ) {
+
+        console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Published already!` );
+
+      } else {
+
+        try {
+
+          try {
+
+            await Local.repo.execGit ( local.path, ['log'] );
+
+          } catch {
+
+            await Local.repo.execGit ( local.path, ['add', '--all'] );
+            await Local.repo.execGit ( local.path, ['commit', '-m', 'Initial commit'] );
+
+          }
+
+          const url = `https://api.${GITHUB_DOMAIN}/user/repos`;
+          const body = JSON.stringify ({ name: local.name }); // has_projects has_wiki
+          await GitHub.rest.fetch ( 'POST', url, body );
+
+          const endpoint = GitHub.repo.getEndpoint ( username, name );
+          await Local.repo.execGit ( local.path, ['remote', 'add', 'origin', endpoint] );
+          await Local.repo.execGit ( local.path, ['push', 'origin', '--all'] );
+          await Local.repo.execGit ( local.path, ['push', 'origin', '--tags'] );
+
+          //TODO: sync too
+
+          console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} ${endpoint}` );
+
+        } catch ( error: unknown ) {
+
+          console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Failed to publish!` );
+
+          if ( error ) {
+
+            console.log ( color.dim ( `${error}` ) );
+
+          }
+
+        }
+
+      }
 
     }
 
@@ -126,7 +201,7 @@ const GitHub = {
 
       const endpoint = Env.GITHUB_TOKEN ? '/user/repos' : `/users/${username}/repos`;
       const url = `https://api.${GITHUB_DOMAIN}${endpoint}?page=${page}&per_page=${GITHUB_REPOS_PER_PAGE}&sort=${GITHUB_REPOS_SORT_DIMENSION}&direction=${GITHUB_REPOS_SORT_DIRECTION}&type=${GITHUB_REPOS_TYPE}`;
-      const repos = await GitHub.rest.fetch ( url );
+      const repos = await GitHub.rest.fetch ( 'GET', url );
 
       return repos.map ( GitHub.repo.parse );
 
@@ -157,6 +232,18 @@ const GitHub = {
 
       }
 
+    },
+
+    publish: async ( username: string, filter?: IFilter ): Promise<void> => {
+
+      const names = await GitHub.repos.getNames ( username, filter );
+
+      for ( const name of names ) {
+
+        await GitHub.repo.publish ( username, name );
+
+      }
+
     }
 
   },
@@ -165,10 +252,12 @@ const GitHub = {
 
   rest: {
 
-    fetch: async ( url: string ): Promise<any> => {
+    fetch: async ( method: string, url: string, body?: string ): Promise<any> => {
 
       return Utils.fetch ({
+        method,
         url,
+        body,
         headers: {
           Accept : 'application/vnd.github.v3+json',
           Authorization: `token ${Env.GITHUB_TOKEN}`,

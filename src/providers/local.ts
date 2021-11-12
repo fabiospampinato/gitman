@@ -110,6 +110,25 @@ const Local = {
 
     },
 
+    get: async ( username: string, name: string, minimal?: boolean ): Promise<ILocalRepo> => {
+
+      if ( !await Local.repo.existsGit ( username, name ) ) Utils.fail ( 'Repository not found' );
+
+      try {
+
+        const repoPath = path.join ( Env.ROOT_PATH, username, name );
+        const repo = await Local.repo.parse ( username, name, repoPath, minimal );
+
+        return repo;
+
+      } catch {
+
+        throw Utils.fail ( 'Repository not found' );
+
+      }
+
+    },
+
     matches: ( username: string, name: string, glob: string ): boolean => {
 
       return micromatch.isMatch ( `${username}/${name}`, glob );

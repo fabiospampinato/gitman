@@ -42,6 +42,18 @@ const GitMan = {
 
   },
 
+  publish: async ( username: string, name: string ): Promise<void> => {
+
+    return GitHub.repo.publish ( username, name );
+
+  },
+
+  publishAll: async ( username: string, filter?: IFilter ): Promise<void> => {
+
+    return GitHub.repos.publish ( username, filter );
+
+  },
+
   sh: async ( command: string, filter?: IFilter ): Promise<void> => {
 
     return Local.repos.sh ( command, filter );

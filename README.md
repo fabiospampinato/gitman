@@ -38,15 +38,16 @@ Usage: gitman [options] [command]
 A simple yet powerful opinionated tool for managing GitHub repositories.
 
 Options:
-  -V, --version                 output the version number
-  -h, --help                    display help for command
+  -V, --version                   output the version number
+  -h, --help                      display help for command
 
 Commands:
-  cd <repository>               CD into a local repository
-  clone [options] <repository>  Clone a remote repository
-  ls [options]                  List all known repositories
-  sh [options] <command>        Execute a shell command in all known repositories
-  help [command]                display help for command
+  cd <repository>                 CD into a local repository
+  clone [options] <repository>    Clone a remote repository
+  ls [options]                    List all known repositories
+  publish [options] <repository>  Publish a local repository to GitHub
+  sh [options] <command>          Execute a shell command in all known repositories
+  help [command]                  display help for command
 ```
 
 The following filtering options are available for most commands:
@@ -131,6 +132,18 @@ Execute a command on a subset of locally cloned repositories:
 
 ```
 gitman sh 'git fetch && echo "Something"'
+```
+
+Publish a repository:
+
+```
+gitman publish fabiospampinato/github
+```
+
+Publish all my vscode-related repositories:
+
+```
+gitman publish -i '**/vscode-*' fabiospampinato/*
 ```
 
 ## Tips
