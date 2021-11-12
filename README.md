@@ -122,6 +122,7 @@ gitman sh 'git fetch && echo "Something"'
 ## Tips
 
 - The `include` glob is matched against the full repository identifier (e.g. username/reponame), therefor most of the times your glob should probably look something like this: `**/foo-*`.
+- GitMan will generally output nothing (except in `--json` mode) if there are no targeted repositories for your command (i.e. user with no repositories, no locally cloned repositories, using filters that exclude everything etc.).
 - GitMan is currently focused on simplicity, not necessarily performance, everything is executed serially for now, a major performance boost could be had in the future by executing stuff in parallel for all targeted repositories.
 
 ## Related
