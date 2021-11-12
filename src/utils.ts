@@ -29,6 +29,30 @@ const Utils = {
 
   },
 
+  /* LANG API */
+
+  lang: { //TODO: Replace these with nanodash
+
+    identity: <T> ( value: T ): T => {
+
+      return value;
+
+    },
+
+    isBoolean: ( value: unknown ): value is boolean => {
+
+      return typeof value === 'boolean';
+
+    },
+
+    isString: ( value: unknown ): value is string => {
+
+      return typeof value === 'string';
+
+    }
+
+  },
+
   /* API */
 
   exec: ( command: string, args: string[] | null, options: { cwd: string, encoding: string, shell?: true } ): Promise<string> => {

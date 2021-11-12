@@ -1,7 +1,6 @@
 
 /* IMPORT */
 
-import _ from 'lodash';
 import {Octokit} from '@octokit/core';
 import micromatch from 'micromatch';
 import {color} from 'specialist';
@@ -90,11 +89,11 @@ const GitHub = {
 
       return repos.filter ( repo => {
 
-        if ( _.isBoolean ( filter.archived ) && repo.isArchived !== filter.archived ) return false;
-        if ( _.isBoolean ( filter.forks ) && repo.isFork !== filter.forks ) return false;
-        if ( _.isBoolean ( filter.private ) && repo.isPrivate !== filter.private ) return false;
-        if ( _.isBoolean ( filter.public ) && repo.isPublic !== filter.public ) return false;
-        if ( _.isString ( filter.include ) && !GitHub.repo.matches ( repo.user, repo.name, filter.include ) ) return false;
+        if ( Utils.lang.isBoolean ( filter.archived ) && repo.isArchived !== filter.archived ) return false;
+        if ( Utils.lang.isBoolean ( filter.forks ) && repo.isFork !== filter.forks ) return false;
+        if ( Utils.lang.isBoolean ( filter.private ) && repo.isPrivate !== filter.private ) return false;
+        if ( Utils.lang.isBoolean ( filter.public ) && repo.isPublic !== filter.public ) return false;
+        if ( Utils.lang.isString ( filter.include ) && !GitHub.repo.matches ( repo.user, repo.name, filter.include ) ) return false;
 
         return true;
 
@@ -116,7 +115,7 @@ const GitHub = {
 
       }
 
-      return GitHub.repos.filter ( _.flatten ( pages ), filter );
+      return GitHub.repos.filter ( pages.flat (), filter );
 
     },
 
@@ -163,7 +162,7 @@ const GitHub = {
           const isArchived = repo.isArchived ? color.yellow ( Symbols.ARCHIVED ) : '';
           const isFork = repo.isFork ? color.magenta ( Symbols.FORK ) : '';
           const isPrivate = repo.isPrivate ? color.red ( Symbols.PRIVATE ) : '';
-          const line = Utils.truncate ( [name, isFork, isArchived, isPrivate, desc].filter ( _.identity ).join ( ' ' ) );
+          const line = Utils.truncate ( [name, isFork, isArchived, isPrivate, desc].filter ( Utils.lang.identity ).join ( ' ' ) );
 
           console.log ( line );
 

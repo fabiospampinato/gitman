@@ -1,7 +1,6 @@
 
 /* IMPORT */
 
-import _ from 'lodash';
 import fs from 'fs';
 import micromatch from 'micromatch';
 import path from 'path';
@@ -43,13 +42,11 @@ const Local = {
 
         } catch ( error: unknown ) {
 
-          const stderr = `${error}`;
-
           console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Failed to clone!` );
 
-          if ( stderr ) {
+          if ( error ) {
 
-            console.log ( color.dim ( stderr ) );
+            console.log ( color.dim ( `${error}` ) );
 
           }
 
@@ -248,11 +245,11 @@ const Local = {
 
       return repos.filter ( repo => {
 
-        if ( _.isBoolean ( filter.archived ) ) Utils.fail ( 'Unsupported local filter: "archived"' ); //TODO: Implement this filter
-        if ( _.isBoolean ( filter.forks ) ) Utils.fail ( 'Unsupported local filter: "forks"' ); //TODO: Implement this filter
-        if ( _.isBoolean ( filter.private ) ) Utils.fail ( 'Unsupported local filter: "private"' ); //TODO: Implement this filter
-        if ( _.isBoolean ( filter.public ) ) Utils.fail ( 'Unsupported local filter: "public"' ); //TODO: Implement this filter
-        if ( _.isString ( filter.include ) && !Local.repo.matches ( repo.user, repo.name, filter.include ) ) return false;
+        if ( Utils.lang.isBoolean ( filter.archived ) ) Utils.fail ( 'Unsupported local filter: "archived"' ); //TODO: Implement this filter
+        if ( Utils.lang.isBoolean ( filter.forks ) ) Utils.fail ( 'Unsupported local filter: "forks"' ); //TODO: Implement this filter
+        if ( Utils.lang.isBoolean ( filter.private ) ) Utils.fail ( 'Unsupported local filter: "private"' ); //TODO: Implement this filter
+        if ( Utils.lang.isBoolean ( filter.public ) ) Utils.fail ( 'Unsupported local filter: "public"' ); //TODO: Implement this filter
+        if ( Utils.lang.isString ( filter.include ) && !Local.repo.matches ( repo.user, repo.name, filter.include ) ) return false;
 
         return true;
 
@@ -313,7 +310,7 @@ const Local = {
           const isDirty = repo.isDirty ? color.yellow ( Symbols.DIRTY ) : '';
           const ahead = repo.stats.ahead ? color.yellow ( `${repo.stats.ahead}${Symbols.AHEAD}` ) : '';
           const behind = repo.stats.behind ? color.yellow ( `${repo.stats.behind}${Symbols.BEHIND}` ) : '';
-          const line = Utils.truncate ( [fullname, branch, isDirty, ahead, behind, desc].filter ( _.identity ).join ( ' ' ) );
+          const line = Utils.truncate ( [fullname, branch, isDirty, ahead, behind, desc].filter ( Utils.lang.identity ).join ( ' ' ) );
 
           console.log ( line );
 

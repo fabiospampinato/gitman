@@ -41,12 +41,10 @@
     "@octokit/core": "^3.5.1",
     "cli-truncate": "^2.1.0",
     "cli-width": "^3.0.0",
-    "lodash": "^4.17.21",
     "micromatch": "^4.0.4",
     "specialist": "^0.4.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.176",
     "@types/micromatch": "^4.0.2",
     "@types/node": "^16.11.7",
     "typescript": "^4.4.4",
