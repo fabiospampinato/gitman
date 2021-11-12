@@ -297,30 +297,31 @@ const Local = {
     sh: async ( command: string, filter?: IFilter ): Promise<void> => {
 
       const repos = await Local.repos.getAll ( filter );
+      const promises = repos.map ( repo => Local.repo.execSh ( repo.path, command ) );
+      const results = await Promise.allSettled ( promises );
 
-      for ( const repo of repos ) {
+      for ( let i = 0, l = results.length; i < l; i++ ) {
 
-        try {
+        const repo = repos[i];
+        const result = results[i];
 
-          const stdout = await Local.repo.execSh ( repo.path, command );
+        if ( result.status === 'fulfilled' ) {
 
           console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-          if ( stdout ) {
+          if ( result.value ) {
 
-            console.log ( color.dim ( stdout ) );
+            console.log ( color.dim ( result.value ) );
 
           }
 
-        } catch ( error: unknown ) {
-
-          const stderr = `${error}`;
+        } else {
 
           console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-          if ( stderr ) {
+          if ( result.reason ) {
 
-            console.log ( color.dim ( stderr ) );
+            console.log ( color.dim ( `${result.reason}` ) );
 
           }
 
