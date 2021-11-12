@@ -68,6 +68,12 @@ const Utils = {
       proc.stdout.on ( 'data', data => stdout += data );
       proc.stderr.on ( 'data', data => stderr += data );
 
+      proc.on ( 'error', () => {
+
+        return reject ( stderr.trim () );
+
+      });
+
       proc.on ( 'close', status => {
 
         if ( status !== 0 ) return reject ( stderr.trim () );
