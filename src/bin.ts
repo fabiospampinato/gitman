@@ -33,7 +33,7 @@ program
     const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+|\*)$/i.exec ( argument );
     if ( !match ) throw new Error ( 'Repository excepted in the "username/repository" format' );
     if ( match[2] === '*' ) {
-      await GitMan.cloneAll ( match[1], Utils.initFilter ( options ) );
+      await GitMan.cloneAll ( match[1], Utils.bin.makeFilter ( options ) );
     } else {
       await GitMan.clone ( match[1], match[2] );
     }
@@ -52,7 +52,7 @@ program
   .option ( '-u, --user <username>', 'List remote repositories for this user or organization' )
   .action ( async options => {
     const {user, json, ...filter} = options;
-    await GitMan.ls ( user, json, Utils.initFilter ( filter ) );
+    await GitMan.ls ( user, json, Utils.bin.makeFilter ( filter ) );
     process.exit ( 0 );
   });
 
@@ -66,7 +66,7 @@ program
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .arguments ( '<command>' )
   .action ( async ( command, options ) => {
-    await GitMan.sh ( command, Utils.initFilter ( options ) );
+    await GitMan.sh ( command, Utils.bin.makeFilter ( options ) );
     process.exit ( 0 );
   });
 

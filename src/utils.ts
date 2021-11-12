@@ -10,6 +10,23 @@ import {IFilter} from './types';
 
 const Utils = {
 
+  /* BIN API */
+
+  bin: {
+
+    makeFilter: ( filter: IFilter ): IFilter => { // Commander pre-initializes these to true, which are interepreted differently by the app
+
+      if ( filter.archived ) delete filter.archived;
+      if ( filter.forks ) delete filter.forks;
+      if ( filter.private ) delete filter.private;
+      if ( filter.public ) delete filter.public;
+
+      return filter;
+
+    }
+
+  },
+
   /* API */
 
   fail: ( error: string ): void => {
@@ -17,17 +34,6 @@ const Utils = {
     console.log ( color.red ( error ) );
 
     process.exit ( 1 );
-
-  },
-
-  initFilter: ( filter: IFilter ): IFilter => {
-
-    if ( filter.archived ) delete filter.archived;
-    if ( filter.forks ) delete filter.forks;
-    if ( filter.private ) delete filter.private;
-    if ( filter.public ) delete filter.public;
-
-    return filter;
 
   },
 
