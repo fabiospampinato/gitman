@@ -99,53 +99,42 @@ const Local = {
     parse: ( username: string, name: string, repoPath: string ): ILocalRepo => {
 
       const manifest = Local.repo.parseManifest ( repoPath );
+      const description = Local.repo.parseDescription ( repoPath, manifest );
+      const keywords = Local.repo.parseKeywords ( repoPath, manifest );
+      const branch = Local.repo.parseBranch ( repoPath, manifest );
+      const isDirty = Local.repo.parseIsDirty ( repoPath, manifest );
+      const [ahead, behind] = Local.repo.parseAheadBehind ( repoPath, manifest );
 
       return {
         id: `${username}/${name}`,
         path: repoPath,
         user: username,
         name,
-        description: Local.repo.parseDescription ( repoPath, manifest ),
-        keywords: Local.repo.parseKeywords ( repoPath, manifest ),
-        branch: Local.repo.parseBranch ( repoPath, manifest ),
-        isDirty: Local.repo.parseIsDirty ( repoPath, manifest ),
+        description,
+        keywords,
+        branch,
+        isDirty,
         stats: {
-          ahead: Local.repo.parseAhead ( repoPath, manifest ),
-          behind: Local.repo.parseBehind ( repoPath, manifest )
+          ahead,
+          behind
         }
       };
 
     },
 
-    parseAhead: ( repoPath: string, manifest?: IManifest ): number => {
+    parseAheadBehind: ( repoPath: string, manifest?: IManifest ): [number, number] => {
 
       try {
 
         const stdout = Local.repo.exec ( repoPath, 'git rev-list --left-right --count $(git symbolic-ref --short HEAD)...$(git rev-parse --abbrev-ref --symbolic-full-name @{u})' );
 
-        const match = /(\d+)/.exec ( stdout );
+        const match = /(\d+).*(\d+)/.exec ( stdout );
 
-        return match ? Number ( match[1] ) : 0;
-
-      } catch {}
-
-      return 0;
-
-    },
-
-    parseBehind: ( repoPath: string, manifest?: IManifest ): number => {
-
-      try {
-
-        const stdout = Local.repo.exec ( repoPath, 'git rev-list --left-right --count $(git symbolic-ref --short HEAD)...$(git rev-parse --abbrev-ref --symbolic-full-name @{u})' );
-
-        const match = /\d+.*(\d+)/.exec ( stdout );
-
-        return match ? Number ( match[1] ) : 0;
+        return match ? [Number ( match[1] ), Number ( match[2] )] : [0, 0];
 
       } catch {}
 
-      return 0;
+      return [0, 0];
 
     },
 
