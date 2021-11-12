@@ -22,17 +22,17 @@ const GitMan = {
 
   },
 
-  get: async ( filter?: IFilter ): Promise<ILocalRepo[]> => {
+  get: async ( minimal?: boolean, filter?: IFilter ): Promise<ILocalRepo[]> => {
 
-    return Local.repos.getAll ( filter );
+    return Local.repos.getAll ( minimal, filter );
 
   },
 
-  ls: async ( username?: string, json?: boolean, filter?: IFilter ): Promise<void> => {
+  ls: async ( username?: string, minimal?: boolean, json?: boolean, filter?: IFilter ): Promise<void> => {
 
-    if ( username ) return GitHub.repos.ls ( username, json, filter );
+    if ( username ) return GitHub.repos.ls ( username, minimal, json, filter );
 
-    return Local.repos.ls ( json, filter );
+    return Local.repos.ls ( minimal, json, filter );
 
   },
 

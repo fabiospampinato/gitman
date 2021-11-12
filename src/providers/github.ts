@@ -146,7 +146,7 @@ const GitHub = {
 
     },
 
-    ls: async ( username: string, json?: boolean, filter?: IFilter ): Promise<void> => {
+    ls: async ( username: string, minimal?: boolean, json?: boolean, filter?: IFilter ): Promise<void> => {
 
       const repos = await GitHub.repos.getAll ( username, filter );
 

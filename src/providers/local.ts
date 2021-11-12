@@ -100,7 +100,15 @@ const Local = {
 
     },
 
-    parse: async ( username: string, name: string, repoPath: string ): Promise<ILocalRepo> => {
+    parse: ( username: string, name: string, repoPath: string, minimal?: boolean ): Promise<ILocalRepo> => {
+
+      if ( minimal ) return Local.repo.parseMinimal ( username, name, repoPath );
+
+      return Local.repo.parseFull ( username, name, repoPath );
+
+    },
+
+    parseFull: async ( username: string, name: string, repoPath: string ): Promise<ILocalRepo> => {
 
       const {ahead, behind, branch, isDirty, description, keywords} = await Local.repo.parseMetadata ( repoPath );
 
@@ -116,6 +124,27 @@ const Local = {
         stats: {
           ahead,
           behind
+        }
+      };
+
+    },
+
+    parseMinimal: async ( username: string, name: string, repoPath: string ): Promise<ILocalRepo> => {
+
+      const {description, keywords} = await Local.repo.parseMetadataNPM ( repoPath );
+
+      return {
+        id: `${username}/${name}`,
+        path: repoPath,
+        user: username,
+        name,
+        description,
+        keywords,
+        branch: '',
+        isDirty: false,
+        stats: {
+          ahead: 0,
+          behind: 0
         }
       };
 
@@ -231,7 +260,7 @@ const Local = {
 
     },
 
-    getAll: async ( filter?: IFilter ): Promise<ILocalRepo[]> => {
+    getAll: async ( minimal?: boolean, filter?: IFilter ): Promise<ILocalRepo[]> => {
 
       if ( !await Utils.exists ( Env.ROOT_PATH ) ) return [];
 
@@ -254,7 +283,7 @@ const Local = {
           if ( !await Local.repo.existsGit ( username.name, name.name ) ) return;
 
           const repoPath = path.join ( usernamePath, name.name );
-          const repo = await Local.repo.parse ( username.name, name.name, repoPath );
+          const repo = await Local.repo.parse ( username.name, name.name, repoPath, minimal );
 
           repos.push ( repo );
 
@@ -266,9 +295,9 @@ const Local = {
 
     },
 
-    ls: async ( json?: boolean, filter?: IFilter ): Promise<void> => {
+    ls: async ( minimal?: boolean, json?: boolean, filter?: IFilter ): Promise<void> => {
 
-      const repos = await Local.repos.getAll ( filter );
+      const repos = await Local.repos.getAll ( minimal, filter );
 
       if ( json ) {
 
@@ -296,7 +325,7 @@ const Local = {
 
     sh: async ( command: string, filter?: IFilter ): Promise<void> => {
 
-      const repos = await Local.repos.getAll ( filter );
+      const repos = await Local.repos.getAll ( true, filter );
       const promises = repos.map ( repo => Local.repo.execSh ( repo.path, command ) );
       const results = await Promise.allSettled ( promises );
 

@@ -49,10 +49,11 @@ program
   .option ( '--no-public', 'Ignore public repositories' )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .option ( '-j, --json', 'Output repositories as JSON' )
+  .option ( '-m, --minimal', 'Include only minimal, quick to retrieve, data for each repository' )
   .option ( '-u, --user <username>', 'List remote repositories for this user or organization' )
   .action ( async options => {
-    const {user, json, ...filter} = options;
-    await GitMan.ls ( user, json, Utils.bin.makeFilter ( filter ) );
+    const {user, json, minimal, ...filter} = options;
+    await GitMan.ls ( user, minimal, json, Utils.bin.makeFilter ( filter ) );
     process.exit ( 0 );
   });
 
