@@ -38,7 +38,7 @@ const Local = {
 
           fs.mkdirSync ( repoPath, { recursive: true } );
 
-          await Local.repo.exec ( repoPath, `git clone ${endpoint} .` );
+          Local.repo.execGit ( repoPath, ['clone', endpoint, '.'] );
 
           console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} ${repoPath}` );
 
@@ -60,7 +60,20 @@ const Local = {
 
     },
 
-    exec: ( repoPath: string, command: string ): string => {
+    execGit: ( repoPath: string, args: string[] ): string => {
+
+      const {status, stderr, stdout} = spawnSync ( 'git', args, {
+        cwd: repoPath,
+        encoding: 'utf-8'
+      });
+
+      if ( status !== 0 ) throw stderr.trim ();
+
+      return stdout.trim ();
+
+    },
+
+    execSh: ( repoPath: string, command: string ): string => {
 
       const {status, stderr, stdout} = spawnSync ( command, {
         cwd: repoPath,
@@ -126,7 +139,7 @@ const Local = {
 
       try {
 
-        const stdout = Local.repo.exec ( repoPath, 'git rev-list --left-right --count $(git symbolic-ref --short HEAD)...$(git rev-parse --abbrev-ref --symbolic-full-name @{u})' );
+        const stdout = Local.repo.execSh ( repoPath, 'git rev-list --left-right --count $(git rev-parse --short HEAD)...$(git rev-parse --abbrev-ref --symbolic-full-name @{u})' );
 
         const match = /(\d+).*(\d+)/.exec ( stdout );
 
@@ -142,7 +155,7 @@ const Local = {
 
       try {
 
-        const stdout = Local.repo.exec ( repoPath, 'git symbolic-ref --short HEAD' );
+        const stdout = Local.repo.execGit ( repoPath, ['symbolic-ref', '--short', 'HEAD'] );
 
         return stdout || '???';
 
@@ -150,7 +163,7 @@ const Local = {
 
         try {
 
-          const stdout = Local.repo.exec ( repoPath, 'git symbolic-ref --short HEAD' );
+          const stdout = Local.repo.execGit ( repoPath, ['rev-parse', '--short', 'HEAD'] );
 
           return stdout ? `#${stdout}` : '???';
 
@@ -172,7 +185,7 @@ const Local = {
 
       try {
 
-        return !!Local.repo.exec ( repoPath, 'git status --porcelain --untracked-files' );
+        return !!Local.repo.execGit ( repoPath, ['status', '--porcelain', '--untracked-files'] );
 
       } catch {}
 
@@ -296,7 +309,7 @@ const Local = {
 
         try {
 
-          const stdout = await Local.repo.exec ( repo.path, command );
+          const stdout = Local.repo.execSh ( repo.path, command );
 
           console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
