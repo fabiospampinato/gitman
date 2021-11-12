@@ -158,7 +158,7 @@ const GitHub = {
 
         for ( const repo of repos ) {
 
-          const name = color.cyan ( repo.name );
+          const name = color.cyan ( `${username}/${repo.name}` );
           const desc = color.dim ( repo.description );
           const isArchived = repo.isArchived ? color.yellow ( Symbols.ARCHIVED ) : '';
           const isFork = repo.isFork ? color.magenta ( Symbols.FORK ) : '';
