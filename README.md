@@ -23,7 +23,7 @@ npm install -g @fabiospampinato/gitman
 There are only two, optional, pieces of configuration:
 
 - **GitHub token**: a GitHub personal access token, possibly with the `repo` scope enabled, can be provided to avoid rate limits and being able to manage private repositories too. You can set a token by using either the `GITMAN_GITHUB_TOKEN` or `GITHUB_TOKEN` environment variables.
-- **Root path**: the folder path where repositories are cloned. By default the first folder found matching the following is used `~/{GitHub,github,Code,code,Projects,projects}`, otherwise `~/Code` is used. You can set a custom root path via the `GITMAN_ROOT` environment variable.
+- **Root path**: the folder path where repositories are cloned. By default the first folder found matching the following is used `~/{GitHub,github,Git,git,Repositories,repositories,Repos,repos,Code,code,Projects,projects}`, otherwise `~/Code` is used. You can set a custom root path via the `GITMAN_ROOT` environment variable.
 
 The only other thing to remember is that repositories are saved according to the following schema: `$ROOT/username/reponame`, if you want GitMan to recognize manually-created repositories too you must follow that convention.
 

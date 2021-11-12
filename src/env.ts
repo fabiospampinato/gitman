@@ -20,7 +20,7 @@ const Env = {
     if ( GITMAN_ROOT ) return GITMAN_ROOT;
 
     const home = os.homedir ();
-    const targets = ['GitHub', 'github', 'Code', 'code', 'Projects', 'projects'];
+    const targets = ['GitHub', 'github', 'Git', 'git', 'Repositories', 'repositories', 'Repos', 'repos', 'Code', 'code', 'Projects', 'projects'];
 
     for ( const target of targets ) {
 
