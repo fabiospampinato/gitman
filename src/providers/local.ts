@@ -14,7 +14,7 @@ import {IFilter, ILocalRepo, IManifest} from '../types';
 
 const Local = {
 
-  /* API */
+  /* REPO API */
 
   repo: {
 
@@ -236,6 +236,8 @@ const Local = {
     }
 
   },
+
+  /* REPOS API */
 
   repos: {
 
