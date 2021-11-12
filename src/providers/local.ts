@@ -102,12 +102,7 @@ const Local = {
 
     parse: async ( username: string, name: string, repoPath: string ): Promise<ILocalRepo> => {
 
-      const manifest = await Local.repo.parseManifest ( repoPath );
-      const description = Local.repo.parseDescription ( repoPath, manifest );
-      const keywords = Local.repo.parseKeywords ( repoPath, manifest );
-      const branch = await Local.repo.parseBranch ( repoPath, manifest );
-      const isDirty = await Local.repo.parseIsDirty ( repoPath, manifest );
-      const [ahead, behind] = await Local.repo.parseAheadBehind ( repoPath, manifest );
+      const {ahead, behind, branch, isDirty, description, keywords} = await Local.repo.parseMetadata ( repoPath );
 
       return {
         id: `${username}/${name}`,
@@ -126,82 +121,91 @@ const Local = {
 
     },
 
-    parseAheadBehind: async ( repoPath: string, manifest?: IManifest ): Promise<[number, number]> => {
+    parseMetadata: async ( repoPath: string ): Promise<{ ahead: number, behind: number, branch: string, isDirty: boolean, description: string, keywords: string[] }> => {
 
-      try {
+      const {parseMetadataGit, parseMetadataNPM} = Local.repo;
+      const promises = <const> [parseMetadataGit ( repoPath ), parseMetadataNPM ( repoPath )];
+      const results = await Promise.allSettled ( promises );
 
-        const stdout = await Local.repo.execSh ( repoPath, 'git rev-list --left-right --count $(git rev-parse --short HEAD)...$(git rev-parse --abbrev-ref --symbolic-full-name @{u})' );
+      if ( results[0].status === 'rejected' ) throw results[0].reason;
+      if ( results[1].status === 'rejected' ) throw results[1].reason;
 
-        const match = /(\d+).*(\d+)/.exec ( stdout );
+      const git = results[0].value;
+      const npm = results[1].value;
 
-        return match ? [Number ( match[1] ), Number ( match[2] )] : [0, 0];
-
-      } catch {}
-
-      return [0, 0];
+      return {...git, ...npm};
 
     },
 
-    parseBranch: async ( repoPath: string, manifest?: IManifest ): Promise<string> => {
+    parseMetadataGitAheadBehind: async ( repoPath: string ): Promise<{ ahead: number, behind: number }> => {
+
+      const stdout = await Local.repo.execSh ( repoPath, 'git rev-list --left-right --count $(git rev-parse --short HEAD)...$(git rev-parse --abbrev-ref --symbolic-full-name @{u})' );
+
+      const match = /(\d+).*(\d+)/.exec ( stdout );
+
+      if ( !match ) throw new Error ();
+
+      const ahead = Number ( match[1] );
+      const behind = Number ( match[2] );
+
+      return { ahead, behind };
+
+    },
+
+    parseMetadataGitBranch: async ( repoPath: string ): Promise<string> => {
+
+      return Local.repo.execGit ( repoPath, ['symbolic-ref', '--short', 'HEAD'] );
+
+    },
+
+    parseMetadataGitCommit: async ( repoPath: string ): Promise<string> => {
+
+      return Local.repo.execGit ( repoPath, ['rev-parse', '--short', 'HEAD'] );
+
+    },
+
+    parseMetadataGitDirty: async ( repoPath: string ): Promise<boolean> => {
+
+      return !!await Local.repo.execGit ( repoPath, ['status', '--porcelain', '--untracked-files'] );
+
+    },
+
+    parseMetadataGit: async ( repoPath: string ): Promise<{ ahead: number, behind: number, branch: string, isDirty: boolean }> => {
+
+      const {parseMetadataGitAheadBehind, parseMetadataGitBranch, parseMetadataGitCommit, parseMetadataGitDirty} = Local.repo;
+      const promises = <const> [parseMetadataGitAheadBehind ( repoPath ), parseMetadataGitBranch ( repoPath ), parseMetadataGitCommit ( repoPath ), parseMetadataGitDirty ( repoPath )];
+      const results = await Promise.allSettled ( promises );
+
+      const ahead = results[0].status === 'fulfilled' ? results[0].value.ahead : 0;
+      const behind = results[0].status === 'fulfilled' ? results[0].value.behind : 0;
+      const branch = results[1].status === 'fulfilled' ? results[1].value : ( results[2].status === 'fulfilled' ? `#${results[2]}` : '???' );
+      const isDirty = results[3].status === 'fulfilled' ? results[3].value : false;
+
+      return {ahead, behind, branch, isDirty};
+
+    },
+
+    parseMetadataNPM: async ( repoPath: string ): Promise<{ description: string, keywords: string[] }> => {
 
       try {
 
-        const stdout = await Local.repo.execGit ( repoPath, ['symbolic-ref', '--short', 'HEAD'] );
+        const manifestPath = path.join ( repoPath, 'package.json' );
+        const manifestContent = await fs.promises.readFile ( manifestPath, 'utf-8' );
+        const manifest: IManifest | undefined = JSON.parse ( manifestContent );
 
-        return stdout || '???';
+        const description = manifest?.description || '';
+        const keywords = manifest?.keywords || [];
+
+        return {description, keywords};
 
       } catch {
 
-        try {
+        const description = '';
+        const keywords = [];
 
-          const stdout = await Local.repo.execGit ( repoPath, ['rev-parse', '--short', 'HEAD'] );
-
-          return stdout ? `#${stdout}` : '???';
-
-        } catch {}
+        return {description, keywords};
 
       }
-
-      return '???';
-
-    },
-
-    parseDescription: ( repoPath: string, manifest?: IManifest ): string => {
-
-      return manifest?.description || '';
-
-    },
-
-    parseIsDirty: async ( repoPath: string, manifest?: IManifest ): Promise<boolean> => {
-
-      try {
-
-        return !!await Local.repo.execGit ( repoPath, ['status', '--porcelain', '--untracked-files'] );
-
-      } catch {}
-
-      return false;
-
-    },
-
-    parseKeywords: ( repoPath: string, manifest?: IManifest ): string[] => {
-
-      return manifest?.keywords || [];
-
-    },
-
-    parseManifest: async ( repoPath: string ): Promise<IManifest | undefined> => {
-
-      const manifestPath = path.join ( repoPath, 'package.json' );
-
-      try {
-
-        const manifestContent = await fs.promises.readFile ( manifestPath, 'utf-8' );
-        const manifest = JSON.parse ( manifestContent );
-
-        return manifest;
-
-      } catch {}
 
     }
 
