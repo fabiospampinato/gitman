@@ -4,6 +4,7 @@
 import {spawn} from 'child_process';
 import truncate from 'cli-truncate';
 import width from 'cli-width';
+import fs from 'fs';
 import {color} from 'specialist';
 import {IFilter} from './types';
 
@@ -51,6 +52,12 @@ const Utils = {
       });
 
     });
+
+  },
+
+  exists: ( targetPath: string ): Promise<boolean> => {
+
+    return fs.promises.access ( targetPath ).then ( () => true, () => false );
 
   },
 

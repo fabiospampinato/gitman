@@ -23,11 +23,11 @@ const Local = {
 
       const repoPath = path.join ( Env.ROOT_PATH, username, name );
 
-      if ( Local.repo.existsGit ( username, name ) ) {
+      if ( await Local.repo.existsGit ( username, name ) ) {
 
         console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Cloned already!` );
 
-      } else if ( Local.repo.existsPath ( username, name ) ) {
+      } else if ( await Local.repo.existsPath ( username, name ) ) {
 
         console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Folder already in use!` );
 
@@ -35,7 +35,7 @@ const Local = {
 
         try {
 
-          fs.mkdirSync ( repoPath, { recursive: true } );
+          await fs.promises.mkdir ( repoPath, { recursive: true } );
 
           await Local.repo.execGit ( repoPath, ['clone', endpoint, '.'] );
 
@@ -78,19 +78,19 @@ const Local = {
 
     },
 
-    existsGit: ( username: string, name: string ): boolean => {
+    existsGit: ( username: string, name: string ): Promise<boolean> => {
 
       const gitPath = path.join ( Env.ROOT_PATH, username, name, '.git' );
 
-      return fs.existsSync ( gitPath );
+      return Utils.exists ( gitPath );
 
     },
 
-    existsPath: ( username: string, name: string ): boolean => {
+    existsPath: ( username: string, name: string ): Promise<boolean> => {
 
       const repoPath = path.join ( Env.ROOT_PATH, username, name );
 
-      return fs.existsSync ( repoPath );
+      return Utils.exists ( repoPath );
 
     },
 
@@ -102,7 +102,7 @@ const Local = {
 
     parse: async ( username: string, name: string, repoPath: string ): Promise<ILocalRepo> => {
 
-      const manifest = Local.repo.parseManifest ( repoPath );
+      const manifest = await Local.repo.parseManifest ( repoPath );
       const description = Local.repo.parseDescription ( repoPath, manifest );
       const keywords = Local.repo.parseKeywords ( repoPath, manifest );
       const branch = await Local.repo.parseBranch ( repoPath, manifest );
@@ -190,13 +190,13 @@ const Local = {
 
     },
 
-    parseManifest: ( repoPath: string ): IManifest | undefined => {
+    parseManifest: async ( repoPath: string ): Promise<IManifest | undefined> => {
 
       const manifestPath = path.join ( repoPath, 'package.json' );
 
       try {
 
-        const manifestContent = fs.readFileSync ( manifestPath, 'utf-8' );
+        const manifestContent = await fs.promises.readFile ( manifestPath, 'utf-8' );
         const manifest = JSON.parse ( manifestContent );
 
         return manifest;
@@ -229,11 +229,11 @@ const Local = {
 
     getAll: async ( filter?: IFilter ): Promise<ILocalRepo[]> => {
 
-      if ( !fs.existsSync ( Env.ROOT_PATH ) ) return [];
+      if ( !await Utils.exists ( Env.ROOT_PATH ) ) return [];
 
       const repos: ILocalRepo[] = [];
 
-      const usernames = fs.readdirSync ( Env.ROOT_PATH, { withFileTypes: true } );
+      const usernames = await fs.promises.readdir ( Env.ROOT_PATH, { withFileTypes: true } );
 
       for ( const username of usernames ) {
 
@@ -241,7 +241,7 @@ const Local = {
 
         const usernamePath = path.join ( Env.ROOT_PATH, username.name );
 
-        const names = fs.readdirSync ( usernamePath, { withFileTypes: true } );
+        const names = await fs.promises.readdir ( usernamePath, { withFileTypes: true } );
 
         for ( const name of names ) {
 
@@ -250,7 +250,7 @@ const Local = {
           const namePath = path.join ( usernamePath, name.name );
           const gitPath = path.join ( namePath, '.git' );
 
-          if ( !fs.existsSync ( gitPath ) ) continue;
+          if ( !await Utils.exists ( gitPath ) ) continue;
 
           const repo = await Local.repo.parse ( username.name, name.name, namePath );
 
