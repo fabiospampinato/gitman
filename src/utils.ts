@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import {spawn} from 'child_process';
 import truncate from 'cli-truncate';
 import width from 'cli-width';
 import {color} from 'specialist';
@@ -28,6 +29,30 @@ const Utils = {
   },
 
   /* API */
+
+  exec: ( command: string, args: string[] | null, options: { cwd: string, encoding: string, shell?: true } ): Promise<string> => {
+
+    const proc = args ? spawn ( command, args, options ) : spawn ( command, options );
+
+    return new Promise ( ( resolve, reject ) => {
+
+      let stdout = '';
+      let stderr = '';
+
+      proc.stdout.on ( 'data', data => stdout += data );
+      proc.stderr.on ( 'data', data => stderr += data );
+
+      proc.on ( 'close', status => {
+
+        if ( status !== 0 ) return reject ( stderr.trim () );
+
+        return resolve ( stdout.trim () );
+
+      });
+
+    });
+
+  },
 
   fail: ( error: string ): void => {
 

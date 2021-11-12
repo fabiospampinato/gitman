@@ -2,7 +2,6 @@
 /* IMPORT */
 
 import _ from 'lodash';
-import {spawnSync} from 'child_process';
 import fs from 'fs';
 import micromatch from 'micromatch';
 import path from 'path';
@@ -38,7 +37,7 @@ const Local = {
 
           fs.mkdirSync ( repoPath, { recursive: true } );
 
-          Local.repo.execGit ( repoPath, ['clone', endpoint, '.'] );
+          await Local.repo.execGit ( repoPath, ['clone', endpoint, '.'] );
 
           console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} ${repoPath}` );
 
@@ -60,30 +59,22 @@ const Local = {
 
     },
 
-    execGit: ( repoPath: string, args: string[] ): string => {
+    execGit: ( repoPath: string, args: string[] ): Promise<string> => {
 
-      const {status, stderr, stdout} = spawnSync ( 'git', args, {
+      return Utils.exec ( 'git', args, {
         cwd: repoPath,
-        encoding: 'utf-8'
+        encoding: 'utf-8',
       });
-
-      if ( status !== 0 ) throw stderr.trim ();
-
-      return stdout.trim ();
 
     },
 
-    execSh: ( repoPath: string, command: string ): string => {
+    execSh: ( repoPath: string, command: string ): Promise<string> => {
 
-      const {status, stderr, stdout} = spawnSync ( command, {
+      return Utils.exec ( command, null, {
         cwd: repoPath,
         encoding: 'utf-8',
         shell: true
       });
-
-      if ( status !== 0 ) throw stderr.trim ();
-
-      return stdout.trim ();
 
     },
 
@@ -109,14 +100,14 @@ const Local = {
 
     },
 
-    parse: ( username: string, name: string, repoPath: string ): ILocalRepo => {
+    parse: async ( username: string, name: string, repoPath: string ): Promise<ILocalRepo> => {
 
       const manifest = Local.repo.parseManifest ( repoPath );
       const description = Local.repo.parseDescription ( repoPath, manifest );
       const keywords = Local.repo.parseKeywords ( repoPath, manifest );
-      const branch = Local.repo.parseBranch ( repoPath, manifest );
-      const isDirty = Local.repo.parseIsDirty ( repoPath, manifest );
-      const [ahead, behind] = Local.repo.parseAheadBehind ( repoPath, manifest );
+      const branch = await Local.repo.parseBranch ( repoPath, manifest );
+      const isDirty = await Local.repo.parseIsDirty ( repoPath, manifest );
+      const [ahead, behind] = await Local.repo.parseAheadBehind ( repoPath, manifest );
 
       return {
         id: `${username}/${name}`,
@@ -135,11 +126,11 @@ const Local = {
 
     },
 
-    parseAheadBehind: ( repoPath: string, manifest?: IManifest ): [number, number] => {
+    parseAheadBehind: async ( repoPath: string, manifest?: IManifest ): Promise<[number, number]> => {
 
       try {
 
-        const stdout = Local.repo.execSh ( repoPath, 'git rev-list --left-right --count $(git rev-parse --short HEAD)...$(git rev-parse --abbrev-ref --symbolic-full-name @{u})' );
+        const stdout = await Local.repo.execSh ( repoPath, 'git rev-list --left-right --count $(git rev-parse --short HEAD)...$(git rev-parse --abbrev-ref --symbolic-full-name @{u})' );
 
         const match = /(\d+).*(\d+)/.exec ( stdout );
 
@@ -151,11 +142,11 @@ const Local = {
 
     },
 
-    parseBranch: ( repoPath: string, manifest?: IManifest ): string => {
+    parseBranch: async ( repoPath: string, manifest?: IManifest ): Promise<string> => {
 
       try {
 
-        const stdout = Local.repo.execGit ( repoPath, ['symbolic-ref', '--short', 'HEAD'] );
+        const stdout = await Local.repo.execGit ( repoPath, ['symbolic-ref', '--short', 'HEAD'] );
 
         return stdout || '???';
 
@@ -163,7 +154,7 @@ const Local = {
 
         try {
 
-          const stdout = Local.repo.execGit ( repoPath, ['rev-parse', '--short', 'HEAD'] );
+          const stdout = await Local.repo.execGit ( repoPath, ['rev-parse', '--short', 'HEAD'] );
 
           return stdout ? `#${stdout}` : '???';
 
@@ -181,11 +172,11 @@ const Local = {
 
     },
 
-    parseIsDirty: ( repoPath: string, manifest?: IManifest ): boolean => {
+    parseIsDirty: async ( repoPath: string, manifest?: IManifest ): Promise<boolean> => {
 
       try {
 
-        return !!Local.repo.execGit ( repoPath, ['status', '--porcelain', '--untracked-files'] );
+        return !!await Local.repo.execGit ( repoPath, ['status', '--porcelain', '--untracked-files'] );
 
       } catch {}
 
@@ -236,7 +227,7 @@ const Local = {
 
     },
 
-    getAll: ( filter?: IFilter ): ILocalRepo[] => {
+    getAll: async ( filter?: IFilter ): Promise<ILocalRepo[]> => {
 
       if ( !fs.existsSync ( Env.ROOT_PATH ) ) return [];
 
@@ -261,7 +252,7 @@ const Local = {
 
           if ( !fs.existsSync ( gitPath ) ) continue;
 
-          const repo = Local.repo.parse ( username.name, name.name, namePath );
+          const repo = await Local.repo.parse ( username.name, name.name, namePath );
 
           repos.push ( repo );
 
@@ -275,7 +266,7 @@ const Local = {
 
     ls: async ( json?: boolean, filter?: IFilter ): Promise<void> => {
 
-      const repos = Local.repos.getAll ( filter );
+      const repos = await Local.repos.getAll ( filter );
 
       if ( json ) {
 
@@ -303,13 +294,13 @@ const Local = {
 
     sh: async ( command: string, filter?: IFilter ): Promise<void> => {
 
-      const repos = Local.repos.getAll ( filter );
+      const repos = await Local.repos.getAll ( filter );
 
       for ( const repo of repos ) {
 
         try {
 
-          const stdout = Local.repo.execSh ( repo.path, command );
+          const stdout = await Local.repo.execSh ( repo.path, command );
 
           console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
