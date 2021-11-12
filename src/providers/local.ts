@@ -239,30 +239,28 @@ const Local = {
 
       const usernames = await fs.promises.readdir ( Env.ROOT_PATH, { withFileTypes: true } );
 
-      for ( const username of usernames ) {
+      await Promise.all ( usernames.map ( async username => {
 
-        if ( !username.isDirectory () ) continue;
+        if ( !username.isDirectory () ) return;
 
         const usernamePath = path.join ( Env.ROOT_PATH, username.name );
 
         const names = await fs.promises.readdir ( usernamePath, { withFileTypes: true } );
 
-        for ( const name of names ) {
+        await Promise.all ( names.map ( async name => {
 
-          if ( !name.isDirectory () ) continue;
+          if ( !name.isDirectory () ) return;
 
-          const namePath = path.join ( usernamePath, name.name );
-          const gitPath = path.join ( namePath, '.git' );
+          if ( !await Local.repo.existsGit ( username.name, name.name ) ) return;
 
-          if ( !await Utils.exists ( gitPath ) ) continue;
-
-          const repo = await Local.repo.parse ( username.name, name.name, namePath );
+          const repoPath = path.join ( usernamePath, name.name );
+          const repo = await Local.repo.parse ( username.name, name.name, repoPath );
 
           repos.push ( repo );
 
-        }
+        }));
 
-      }
+      }));
 
       return Local.repos.filter ( repos, filter );
 
