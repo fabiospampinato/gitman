@@ -275,13 +275,13 @@ const Local = {
 
         for ( const repo of repos ) {
 
-          const name = color.cyan ( repo.name );
+          const fullname = color.cyan ( `${repo.user}/${repo.name}` );
           const desc = repo.description ? color.dim ( repo.description ) : '';
           const branch = repo.branch ? color.magenta ( repo.branch ) : '';
           const isDirty = repo.isDirty ? color.yellow ( Symbols.DIRTY ) : '';
           const ahead = repo.stats.ahead ? color.yellow ( `${repo.stats.ahead}${Symbols.AHEAD}` ) : '';
           const behind = repo.stats.behind ? color.yellow ( `${repo.stats.behind}${Symbols.BEHIND}` ) : '';
-          const line = Utils.truncate ( [name, branch, isDirty, ahead, behind, desc].filter ( _.identity ).join ( ' ' ) );
+          const line = Utils.truncate ( [fullname, branch, isDirty, ahead, behind, desc].filter ( _.identity ).join ( ' ' ) );
 
           console.log ( line );
 
