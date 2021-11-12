@@ -10,6 +10,12 @@ const GitMan = {
 
   /* API */
 
+  cd: async ( username: string, name: string ): Promise<void> => {
+
+    return Local.repo.cd ( username, name );
+
+  },
+
   clone: async ( username: string, name: string ): Promise<void> => {
 
     return GitHub.repo.clone ( username, name );

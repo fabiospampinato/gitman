@@ -21,6 +21,17 @@ program
   .description ( description );
 
 program
+  .command ( 'cd' )
+  .description ( 'CD into a local repository' )
+  .arguments ( '<repository>' )
+  .action ( async argument => {
+    const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+)$/i.exec ( argument );
+    if ( !match ) throw new Error ( 'Repository excepted in the "username/repository" format' );
+    await GitMan.cd ( match[1], match[2] );
+    process.exit ( 0 );
+  });
+
+program
   .command ( 'clone' )
   .description ( 'Clone a remote repository' )
   .option ( '--no-archived', 'Ignore archived repositories' )

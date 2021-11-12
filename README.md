@@ -42,6 +42,7 @@ Options:
   -h, --help                    display help for command
 
 Commands:
+  cd <repository>               CD into a local repository
   clone [options] <repository>  Clone a remote repository
   ls [options]                  List all known repositories
   sh [options] <command>        Execute a shell command in all known repositories
@@ -82,6 +83,12 @@ Clone all my vscode-related repositories:
 
 ```
 gitman clone -i '**/vscode-*' fabiospampinato/*
+```
+
+CD into a repository (actually this spawn a sub-shell, which you can `exit` from to go back):
+
+```
+gitman cd fabiospampinato/gitman
 ```
 
 List all locally cloned repositories, this provides some useful information about the dirty status and number of commits ahead/behind origin:

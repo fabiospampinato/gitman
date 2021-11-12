@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import {spawnSync} from 'child_process';
 import fs from 'fs';
 import micromatch from 'micromatch';
 import path from 'path';
@@ -17,6 +18,24 @@ const Local = {
   /* REPO API */
 
   repo: {
+
+    cd: async ( username: string, name: string ): Promise<void> => {
+
+      const repoPath = path.join ( Env.ROOT_PATH, username, name );
+
+      if ( !await Utils.exists ( repoPath ) ) return Utils.fail ( 'Repository not found' );
+
+      const shell = process.env.SHELL;
+
+      if ( !shell ) return Utils.fail ( 'Unable to find current shell in use' );
+
+      spawnSync ( shell, { // Spawning a sub-shell at path
+        cwd: repoPath,
+        stdio: 'inherit',
+        env: process.env
+      });
+
+    },
 
     clone: async ( username: string, name: string, endpoint: string ): Promise<void> => {
 
