@@ -1,7 +1,6 @@
 
 /* IMPORT */
 
-import fetch from 'node-fetch';
 import micromatch from 'micromatch';
 import {color} from 'specialist';
 import {displayName, version} from '../../package.json';
@@ -168,17 +167,14 @@ const GitHub = {
 
     fetch: async ( url: string ): Promise<any> => {
 
-      const response = await fetch ( url, {
+      return Utils.fetch ({
+        url,
         headers: {
           Accept : 'application/vnd.github.v3+json',
           Authorization: `token ${Env.GITHUB_TOKEN}`,
           'User-Agent': `${displayName}/v${version}`
-        }}
-      );
-
-      const data = await response.json ();
-
-      return data;
+        }
+      });
 
     }
 

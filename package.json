@@ -41,7 +41,7 @@
     "cli-truncate": "^2.1.0",
     "cli-width": "^3.0.0",
     "micromatch": "^4.0.4",
-    "node-fetch": "^2.6.6",
+    "simple-get": "^4.0.0",
     "specialist": "^0.4.1"
   },
   "devDependencies": {

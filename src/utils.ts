@@ -5,6 +5,7 @@ import {spawn} from 'child_process';
 import truncate from 'cli-truncate';
 import width from 'cli-width';
 import fs from 'fs';
+import get from 'simple-get';
 import {color} from 'specialist';
 import {IFilter} from './types';
 
@@ -90,6 +91,22 @@ const Utils = {
     console.log ( color.red ( error ) );
 
     process.exit ( 1 );
+
+  },
+
+  fetch: ( options: { url: string, headers?: Record<string, string> } ): Promise<any> => {
+
+    return new Promise ( ( resolve, reject ) => {
+
+      get.concat ( options, ( error, response, data ) => {
+
+        if ( error ) return reject ( error );
+
+        return resolve ( JSON.parse ( data.toString () ) );
+
+      });
+
+    });
 
   },
 
