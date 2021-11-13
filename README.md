@@ -47,7 +47,7 @@ Commands:
   ls [options]                    List all known repositories
   publish [options] <repository>  Publish a local repository to GitHub
   sh [options] <command>          Execute a shell command in all known repositories
-  sync [options] <command>        Synchronize all known repositories with GitHub (fetch, description, keywords)
+  sync [options] <repository>     Synchronize all known repositories with GitHub (fetch, description, keywords)
   whoami                          Output the user associated with the provided GitHub token, if any
   help [command]                  display help for command
 ```

@@ -103,7 +103,7 @@ program
   .option ( '--no-private', 'Ignore private repositories' )
   .option ( '--no-public', 'Ignore public repositories' )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
-  .arguments ( '<command>' )
+  .arguments ( '<repository>' )
   .action ( async ( argument, options ) => {
     const [username, name] = Utils.bin.parseIdentifier ( argument, true );
     if ( name === '*' ) {
