@@ -112,9 +112,9 @@ const GitHub = {
           await Local.repo.execGit ( local.path, ['push', 'origin', '--all'] );
           await Local.repo.execGit ( local.path, ['push', 'origin', '--tags'] );
 
-          //TODO: sync too
-
           console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} ${endpoint}` );
+
+          await GitHub.repo.sync ( username, name );
 
         } catch ( error: unknown ) {
 
