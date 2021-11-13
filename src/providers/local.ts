@@ -313,7 +313,9 @@ const Local = {
 
       await Promise.all ( usernames.map ( async username => {
 
-        if ( !username.isDirectory () ) return;
+        const usernameLink = username.isSymbolicLink () ? await Utils.fs.getDirent ( path.join ( Env.ROOT_PATH, username.name ) ) || username : username;
+
+        if ( !username.isDirectory () && !usernameLink.isDirectory () ) return;
 
         const usernamePath = path.join ( Env.ROOT_PATH, username.name );
 
@@ -321,7 +323,9 @@ const Local = {
 
         await Promise.all ( names.map ( async name => {
 
-          if ( !name.isDirectory () ) return;
+          const nameLink = name.isSymbolicLink () ? await Utils.fs.getDirent ( path.join ( usernamePath, name.name ) ) || name : name;
+
+          if ( !name.isDirectory () && !nameLink.isDirectory () ) return;
 
           if ( !await Local.repo.existsGit ( username.name, name.name ) ) return;
 

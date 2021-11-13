@@ -5,6 +5,7 @@ import {spawn} from 'child_process';
 import truncate from 'cli-truncate';
 import width from 'cli-width';
 import fs from 'fs';
+import path from 'path';
 import get from 'simple-get';
 import {color} from 'specialist';
 import {IFilter} from './types';
@@ -37,6 +38,25 @@ const Utils = {
       if ( !allowStar && match[2] === '*' ) throw Utils.fail ( 'The "username/*" format is unsupported' );
 
       return [match[1], match[2]];
+
+    }
+
+  },
+
+  /* FS API */
+
+  fs: {
+
+    getDirent: async ( filePath: string ): Promise<fs.Dirent | undefined> => {
+
+      const realPath = await fs.promises.realpath ( filePath );
+      const dirname = path.dirname ( realPath );
+      const basename = path.basename ( realPath );
+
+      const dirents = await fs.promises.readdir ( dirname, { withFileTypes: true } );
+      const dirent = dirents.find ( dirent => dirent.name === basename );
+
+      return dirent;
 
     }
 
