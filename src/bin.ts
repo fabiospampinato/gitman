@@ -118,4 +118,12 @@ program
     process.exit ( 0 );
   });
 
+program
+  .command ( 'whoami' )
+  .description ( 'Outputs the user associated with the provided GitHub token, if any' )
+  .action ( async () => {
+    await GitMan.whoami ();
+    process.exit ( 0 );
+  });
+
 program.parse ();

@@ -70,6 +70,12 @@ const GitMan = {
 
     return GitHub.repos.sync ( username, filter );
 
+  },
+
+  whoami: async (): Promise<void> => {
+
+    return GitHub.user.whoami ();
+
   }
 
 };

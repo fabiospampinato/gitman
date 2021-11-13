@@ -48,6 +48,7 @@ Commands:
   publish [options] <repository>  Publish a local repository to GitHub
   sh [options] <command>          Execute a shell command in all known repositories
   sync [options] <command>        Synchronize all known repositories with GitHub (fetch, description, keywords)
+  whoami                          Outputs the user associated with the provided GitHub token, if any
   help [command]                  display help for command
 ```
 
@@ -157,6 +158,12 @@ Sync all repositories for a user/org:
 
 ```
 gitman sync 'fabiospampinato/*'
+```
+
+Get the user handle associated with the provided GitHub token:
+
+```
+gitman whoami
 ```
 
 ## Tips

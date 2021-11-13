@@ -373,6 +373,43 @@ const GitHub = {
 
     }
 
+  },
+
+  /* USER API */
+
+  user: {
+
+    getUsername: async (): Promise<string | undefined> => {
+
+      try {
+
+        const url = `https://api.${GITHUB_DOMAIN}/user`;
+        const user = await GitHub.rest.fetch ( 'GET', url );
+
+        return user.login;
+
+      } catch {}
+
+    },
+
+    whoami: async (): Promise<void> => {
+
+      if ( !Env.GITHUB_TOKEN ) throw Utils.fail ( 'No "GITMAN_GITHUB_TOKEN" nor "GITHUB_TOKEN" environment variables provided!' );
+
+      const username = await GitHub.user.getUsername ();
+
+      if ( username ) {
+
+        console.log ( username );
+
+      } else {
+
+        Utils.fail ( 'Token not associated with any user, it\'s probably invalid!' );
+
+      }
+
+    }
+
   }
 
 };
