@@ -102,4 +102,24 @@ program
     process.exit ( 0 );
   });
 
+program
+  .command ( 'sync' )
+  .description ( 'Synchronize all known repositories with GitHub (fetch, description, keywords)' )
+  .option ( '--no-archived', 'Ignore archived repositories' )
+  .option ( '--no-forks', 'Ignore forked repositories' )
+  .option ( '--no-private', 'Ignore private repositories' )
+  .option ( '--no-public', 'Ignore public repositories' )
+  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
+  .arguments ( '<command>' )
+  .action ( async ( argument, options ) => {
+    const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+|\*)$/i.exec ( argument );
+    if ( !match ) throw new Error ( 'Repository excepted in the "username/repository" format' );
+    if ( match[2] === '*' ) {
+      await GitMan.syncAll ( match[1], Utils.bin.makeFilter ( options ) );
+    } else {
+      await GitMan.sync ( match[1], match[2] );
+    }
+    process.exit ( 0 );
+  });
+
 program.parse ();

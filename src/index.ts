@@ -58,6 +58,18 @@ const GitMan = {
 
     return Local.repos.sh ( command, filter );
 
+  },
+
+  sync: async ( username: string, name: string ): Promise<void> => {
+
+    return GitHub.repo.sync ( username, name );
+
+  },
+
+  syncAll: async ( username: string, filter?: IFilter ): Promise<void> => {
+
+    return GitHub.repos.sync ( username, filter );
+
   }
 
 };

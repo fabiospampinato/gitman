@@ -106,7 +106,7 @@ const GitHub = {
           }
 
           const url = `https://api.${GITHUB_DOMAIN}/user/repos`;
-          const body = JSON.stringify ({ name: local.name }); // has_projects has_wiki
+          const body = JSON.stringify ({ name: local.name });
           await GitHub.rest.fetch ( 'POST', url, body );
 
           const endpoint = GitHub.repo.getEndpoint ( username, name );
@@ -129,6 +129,102 @@ const GitHub = {
           }
 
         }
+
+      }
+
+    },
+
+    sync: async ( username: string, name: string ): Promise<void> => {
+
+      const local = await Local.repo.get ( username, name, true );
+      const remote = await GitHub.repo.get ( username, name );
+
+      if ( !remote ) {
+
+        console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Remote repository not found!` );
+
+      } else {
+
+        try {
+
+          try {
+
+            await Local.repo.execGit ( local.path, ['fetch', '--all'] );
+
+          } catch ( error: unknown ) {
+
+            console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Failed to fetch!` );
+
+            if ( error ) {
+
+              console.log ( color.dim ( `${error}` ) );
+
+            }
+
+            throw new Error ();
+
+          }
+
+          const areKeywordsEqual = Utils.lang.isEqual ( local.keywords.sort (), remote.keywords.sort () );
+
+          if ( !areKeywordsEqual ) {
+
+            try {
+
+              const url = `https://api.${GITHUB_DOMAIN}/repos/${username}/${name}/topics`;
+              const body = JSON.stringify ({ names: local.keywords });
+              await GitHub.rest.fetch ( 'PUT', url, body );
+
+            } catch ( error: unknown ) {
+
+              console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Failed to update the keywords!` );
+
+              if ( error ) {
+
+                console.log ( color.dim ( `${error}` ) );
+
+              }
+
+              throw new Error ();
+
+            }
+
+          }
+
+          const areDescriptionsEqual = local.description === remote.description;
+
+          if ( !areDescriptionsEqual ) {
+
+            try {
+
+              const url = `https://api.${GITHUB_DOMAIN}/repos/${username}/${name}`;
+              const body = JSON.stringify ({ description: local.description });
+              await GitHub.rest.fetch ( 'PATCH', url, body );
+
+            } catch ( error: unknown ) {
+
+              console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Failed to update the description!` );
+
+              if ( error ) {
+
+                console.log ( color.dim ( `${error}` ) );
+
+              }
+
+              throw new Error ();
+
+            }
+
+          }
+
+          const labelFetch = 'Fetched';
+          const labelDescription = !areDescriptionsEqual ? ', updated description' : '';
+          const labelKeywords = !areKeywordsEqual ? ', updated keywords' : '';
+          const label = `${labelFetch}${labelDescription}${labelKeywords}!`;
+
+          console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} ${label}` );
+
+        } catch {}
 
       }
 
@@ -241,6 +337,18 @@ const GitHub = {
       for ( const name of names ) {
 
         await GitHub.repo.publish ( username, name );
+
+      }
+
+    },
+
+    syncAll: async ( username: string, filter?: IFilter ): Promise<void> => {
+
+      const names = await GitHub.repos.getNames ( username, filter );
+
+      for ( const name of names ) {
+
+        await GitHub.repo.sync ( username, name );
 
       }
 

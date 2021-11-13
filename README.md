@@ -47,6 +47,7 @@ Commands:
   ls [options]                    List all known repositories
   publish [options] <repository>  Publish a local repository to GitHub
   sh [options] <command>          Execute a shell command in all known repositories
+  sync [options] <command>        Synchronize all known repositories with GitHub (fetch, description, keywords)
   help [command]                  display help for command
 ```
 
@@ -137,13 +138,25 @@ gitman sh 'git fetch && echo "Something"'
 Publish a repository:
 
 ```
-gitman publish fabiospampinato/github
+gitman publish fabiospampinato/gitman
 ```
 
 Publish all my vscode-related repositories:
 
 ```
 gitman publish -i '**/vscode-*' fabiospampinato/*
+```
+
+Sync a repository:
+
+```
+gitman sync fabiospampinato/gitman
+```
+
+Sync all repositories for a user/org:
+
+```
+gitman sync fabiospampinato/*
 ```
 
 ## Tips
