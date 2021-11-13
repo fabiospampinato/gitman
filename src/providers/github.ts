@@ -238,11 +238,11 @@ const GitHub = {
 
       const names = await GitHub.repos.getNames ( username, filter );
 
-      for ( const name of names ) {
+      await Promise.all ( names.map ( async name => {
 
         await GitHub.repo.clone ( username, name );
 
-      }
+      }));
 
     },
 
