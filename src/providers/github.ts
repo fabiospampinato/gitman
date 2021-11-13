@@ -165,7 +165,7 @@ const GitHub = {
 
           const areKeywordsEqual = Utils.lang.isEqual ( local.keywords.sort (), remote.keywords.sort () );
 
-          if ( !areKeywordsEqual ) {
+          if ( !areKeywordsEqual && local.keywords.length ) {
 
             try {
 
@@ -191,7 +191,7 @@ const GitHub = {
 
           const areDescriptionsEqual = local.description === remote.description;
 
-          if ( !areDescriptionsEqual ) {
+          if ( !areDescriptionsEqual && local.description.length ) {
 
             try {
 
