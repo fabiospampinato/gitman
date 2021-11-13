@@ -2,7 +2,7 @@
   "name": "@fabiospampinato/gitman",
   "displayName": "gitman",
   "description": "A simple yet powerful opinionated tool for managing GitHub repositories.",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "bin": "dist/src/bin.js",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
