@@ -72,19 +72,19 @@ gitman clone fabiospampinato/gitman
 Clone all repositories from a user/org:
 
 ```
-gitman clone fabiospampinato/*
+gitman clone 'fabiospampinato/*'
 ```
 
 Clone all non-archived and non-forks repositories from a user/org:
 
 ```
-gitman clone --no-archived --no-forks fabiospampinato/*
+gitman clone --no-archived --no-forks 'fabiospampinato/*'
 ```
 
 Clone all my vscode-related repositories:
 
 ```
-gitman clone -i '**/vscode-*' fabiospampinato/*
+gitman clone -i '**/vscode-*' 'fabiospampinato/*'
 ```
 
 CD into a repository (actually this spawn a sub-shell, which you can `exit` from to go back):
@@ -144,7 +144,7 @@ gitman publish fabiospampinato/gitman
 Publish all my vscode-related repositories:
 
 ```
-gitman publish -i '**/vscode-*' fabiospampinato/*
+gitman publish -i '**/vscode-*' 'fabiospampinato/*'
 ```
 
 Sync a repository:
@@ -156,13 +156,14 @@ gitman sync fabiospampinato/gitman
 Sync all repositories for a user/org:
 
 ```
-gitman sync fabiospampinato/*
+gitman sync 'fabiospampinato/*'
 ```
 
 ## Tips
 
 - The `include` glob is matched against the full repository identifier (e.g. username/reponame), therefor most of the times your glob should probably look something like this: `**/foo-*`.
 - GitMan will generally output nothing (except in `--json` mode) if there are no targeted repositories for your command (i.e. user with no repositories, no locally cloned repositories, using filters that exclude everything etc.).
+- GitMan works with any kind of git repository, but it's especially suited for NPM packages, since it's able to extract a description, keywords, and private status from them.
 
 ## Related
 

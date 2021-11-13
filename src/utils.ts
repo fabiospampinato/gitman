@@ -26,6 +26,18 @@ const Utils = {
 
       return filter;
 
+    },
+
+    parseIdentifier: ( string: string, allowStar: boolean ): [string, string] => {
+
+      const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+|\*)$/i.exec ( string );
+
+      if ( !match ) throw Utils.fail ( 'Repository excepted in the "username/repository" format' );
+
+      if ( !allowStar && match[2] === '*' ) throw Utils.fail ( 'The "username/*" format is unsupported' );
+
+      return [match[1], match[2]];
+
     }
 
   },
@@ -106,7 +118,7 @@ const Utils = {
 
   },
 
-  fail: ( error: string ): void => {
+  fail: ( error: string ): never => {
 
     console.log ( color.red ( error ) );
 

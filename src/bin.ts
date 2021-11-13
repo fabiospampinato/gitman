@@ -25,9 +25,8 @@ program
   .description ( 'CD into a local repository' )
   .arguments ( '<repository>' )
   .action ( async argument => {
-    const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+)$/i.exec ( argument );
-    if ( !match ) throw new Error ( 'Repository excepted in the "username/repository" format' );
-    await GitMan.cd ( match[1], match[2] );
+    const [username, name] = Utils.bin.parseIdentifier ( argument, false );
+    await GitMan.cd ( username, name );
     process.exit ( 0 );
   });
 
@@ -41,12 +40,11 @@ program
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .arguments ( '<repository>' )
   .action ( async ( argument, options ) => {
-    const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+|\*)$/i.exec ( argument );
-    if ( !match ) throw new Error ( 'Repository excepted in the "username/repository" format' );
-    if ( match[2] === '*' ) {
-      await GitMan.cloneAll ( match[1], Utils.bin.makeFilter ( options ) );
+    const [username, name] = Utils.bin.parseIdentifier ( argument, true );
+    if ( name === '*' ) {
+      await GitMan.cloneAll ( username, Utils.bin.makeFilter ( options ) );
     } else {
-      await GitMan.clone ( match[1], match[2] );
+      await GitMan.clone ( username, name );
     }
     process.exit ( 0 );
   });
@@ -78,12 +76,11 @@ program
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .arguments ( '<repository>' )
   .action ( async ( argument, options ) => {
-    const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+|\*)$/i.exec ( argument );
-    if ( !match ) throw new Error ( 'Repository excepted in the "username/repository" format' );
-    if ( match[2] === '*' ) {
-      await GitMan.publishAll ( match[1], Utils.bin.makeFilter ( options ) );
+    const [username, name] = Utils.bin.parseIdentifier ( argument, true );
+    if ( name === '*' ) {
+      await GitMan.publishAll ( username, Utils.bin.makeFilter ( options ) );
     } else {
-      await GitMan.publish ( match[1], match[2] );
+      await GitMan.publish ( username, name );
     }
     process.exit ( 0 );
   });
@@ -112,12 +109,11 @@ program
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .arguments ( '<command>' )
   .action ( async ( argument, options ) => {
-    const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+|\*)$/i.exec ( argument );
-    if ( !match ) throw new Error ( 'Repository excepted in the "username/repository" format' );
-    if ( match[2] === '*' ) {
-      await GitMan.syncAll ( match[1], Utils.bin.makeFilter ( options ) );
+    const [username, name] = Utils.bin.parseIdentifier ( argument, true );
+    if ( name === '*' ) {
+      await GitMan.syncAll ( username, Utils.bin.makeFilter ( options ) );
     } else {
-      await GitMan.sync ( match[1], match[2] );
+      await GitMan.sync ( username, name );
     }
     process.exit ( 0 );
   });
