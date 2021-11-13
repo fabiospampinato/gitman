@@ -9,10 +9,6 @@ import GitMan from '.'
 
 /* MAIN */
 
-//TODO: Delete command
-//TODO: Publish command
-//TODO: Sync command
-
 updater ({ name, version });
 
 program
@@ -120,7 +116,7 @@ program
 
 program
   .command ( 'whoami' )
-  .description ( 'Outputs the user associated with the provided GitHub token, if any' )
+  .description ( 'Output the user associated with the provided GitHub token, if any' )
   .action ( async () => {
     await GitMan.whoami ();
     process.exit ( 0 );

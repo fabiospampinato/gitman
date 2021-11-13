@@ -48,7 +48,7 @@ Commands:
   publish [options] <repository>  Publish a local repository to GitHub
   sh [options] <command>          Execute a shell command in all known repositories
   sync [options] <command>        Synchronize all known repositories with GitHub (fetch, description, keywords)
-  whoami                          Outputs the user associated with the provided GitHub token, if any
+  whoami                          Output the user associated with the provided GitHub token, if any
   help [command]                  display help for command
 ```
 
@@ -133,7 +133,7 @@ gitman sh 'cat package.json | grep typescript'
 Execute a command on a subset of locally cloned repositories:
 
 ```
-gitman sh 'git fetch && echo "Something"'
+gitman sh -i '**/vscode-*' 'git fetch && echo "Something"'
 ```
 
 Publish a repository:

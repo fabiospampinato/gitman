@@ -341,7 +341,7 @@ const GitHub = {
 
     },
 
-    syncAll: async ( username: string, filter?: IFilter ): Promise<void> => {
+    sync: async ( username: string, filter?: IFilter ): Promise<void> => {
 
       const names = await GitHub.repos.getNames ( username, filter );
 
