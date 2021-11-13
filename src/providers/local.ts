@@ -157,6 +157,7 @@ const Local = {
         branch,
         isDirty,
         isPrivate,
+        isPublic: !isPrivate,
         stats: {
           ahead,
           behind
@@ -179,6 +180,7 @@ const Local = {
         branch: '',
         isDirty: false,
         isPrivate,
+        isPublic: !isPrivate,
         stats: {
           ahead: 0,
           behind: 0
@@ -291,8 +293,8 @@ const Local = {
 
         if ( Utils.lang.isBoolean ( filter.archived ) ) Utils.fail ( 'Unsupported local filter: "archived"' ); //TODO: Implement this filter
         if ( Utils.lang.isBoolean ( filter.forks ) ) Utils.fail ( 'Unsupported local filter: "forks"' ); //TODO: Implement this filter
-        if ( Utils.lang.isBoolean ( filter.private ) ) Utils.fail ( 'Unsupported local filter: "private"' ); //TODO: Implement this filter
-        if ( Utils.lang.isBoolean ( filter.public ) ) Utils.fail ( 'Unsupported local filter: "public"' ); //TODO: Implement this filter
+        if ( Utils.lang.isBoolean ( filter.private ) && repo.isPrivate !== filter.private ) return false;
+        if ( Utils.lang.isBoolean ( filter.public ) && repo.isPublic !== filter.public ) return false;
         if ( Utils.lang.isString ( filter.include ) && !Local.repo.matches ( repo.user, repo.name, filter.include ) ) return false;
 
         return true;

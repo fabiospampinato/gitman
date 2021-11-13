@@ -43,6 +43,7 @@ type ILocalRepo = {
   branch: string,
   isDirty: boolean,
   isPrivate: boolean,
+  isPublic: boolean,
   stats: {
     ahead: number,
     behind: number
