@@ -334,7 +334,7 @@ const Local = {
 
       }));
 
-      return Local.repos.filter ( repos, filter );
+      return Local.repos.sort ( Local.repos.filter ( repos, filter ) );
 
     },
 
@@ -400,6 +400,20 @@ const Local = {
         }
 
       }
+
+    },
+
+    sort: ( repos: ILocalRepo[] ): ILocalRepo[] => {
+
+      return [...repos].sort ( ( a, b ) => {
+
+        if ( a.id === b.id ) return 0;
+
+        if ( a.id > b.id ) return 1;
+
+        return -1;
+
+      });
 
     }
 
