@@ -84,8 +84,6 @@ const GitHub = {
       const local = await Local.repo.get ( username, name, true );
       const remote = await GitHub.repo.get ( username, name );
 
-      //TODO: Refuse to publish if private
-
       if ( remote ) {
 
         console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${username}/${name}` )} ${color.dim ( '->' )} Published already!` );
@@ -106,7 +104,7 @@ const GitHub = {
           }
 
           const url = `https://api.${GITHUB_DOMAIN}/user/repos`;
-          const body = JSON.stringify ({ name: local.name });
+          const body = JSON.stringify ({ name: local.name, private: local.isPrivate });
           await GitHub.rest.fetch ( 'POST', url, body );
 
           const endpoint = GitHub.repo.getEndpoint ( username, name );

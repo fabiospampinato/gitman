@@ -145,7 +145,7 @@ const Local = {
 
     parseFull: async ( username: string, name: string, repoPath: string ): Promise<ILocalRepo> => {
 
-      const {ahead, behind, branch, isDirty, description, keywords} = await Local.repo.parseMetadata ( repoPath );
+      const {ahead, behind, branch, isDirty, description, keywords, isPrivate} = await Local.repo.parseMetadata ( repoPath );
 
       return {
         id: `${username}/${name}`,
@@ -156,6 +156,7 @@ const Local = {
         keywords,
         branch,
         isDirty,
+        isPrivate,
         stats: {
           ahead,
           behind
@@ -166,7 +167,7 @@ const Local = {
 
     parseMinimal: async ( username: string, name: string, repoPath: string ): Promise<ILocalRepo> => {
 
-      const {description, keywords} = await Local.repo.parseMetadataNPM ( repoPath );
+      const {description, keywords, isPrivate} = await Local.repo.parseMetadataNPM ( repoPath );
 
       return {
         id: `${username}/${name}`,
@@ -177,6 +178,7 @@ const Local = {
         keywords,
         branch: '',
         isDirty: false,
+        isPrivate,
         stats: {
           ahead: 0,
           behind: 0
@@ -185,7 +187,7 @@ const Local = {
 
     },
 
-    parseMetadata: async ( repoPath: string ): Promise<{ ahead: number, behind: number, branch: string, isDirty: boolean, description: string, keywords: string[] }> => {
+    parseMetadata: async ( repoPath: string ): Promise<{ ahead: number, behind: number, branch: string, isDirty: boolean, description: string, keywords: string[], isPrivate: boolean }> => {
 
       const {parseMetadataGit, parseMetadataNPM} = Local.repo;
       const promises = <const> [parseMetadataGit ( repoPath ), parseMetadataNPM ( repoPath )];
@@ -249,7 +251,7 @@ const Local = {
 
     },
 
-    parseMetadataNPM: async ( repoPath: string ): Promise<{ description: string, keywords: string[] }> => {
+    parseMetadataNPM: async ( repoPath: string ): Promise<{ description: string, keywords: string[], isPrivate: boolean }> => {
 
       try {
 
@@ -259,15 +261,17 @@ const Local = {
 
         const description = manifest?.description || '';
         const keywords = manifest?.keywords || [];
+        const isPrivate = manifest?.private ?? false;
 
-        return {description, keywords};
+        return {description, keywords, isPrivate};
 
       } catch {
 
         const description = '';
         const keywords = [];
+        const isPrivate = false;
 
-        return {description, keywords};
+        return {description, keywords, isPrivate};
 
       }
 

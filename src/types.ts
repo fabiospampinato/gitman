@@ -42,6 +42,7 @@ type ILocalRepo = {
   keywords: string[],
   branch: string,
   isDirty: boolean,
+  isPrivate: boolean,
   stats: {
     ahead: number,
     behind: number
@@ -49,6 +50,7 @@ type ILocalRepo = {
 };
 
 type IManifest = {
+  private?: boolean,
   description?: string,
   keywords?: string[]
 };
