@@ -59,8 +59,8 @@ const GitHub = {
         id: `${repo.id}`,
         user: repo.owner.login,
         name: repo.name,
-        description: repo.description,
-        keywords: repo.topics,
+        description: repo.description || '',
+        keywords: repo.topics || [],
         branch: repo.default_branch,
         isArchived: repo.archived,
         isDisabled: repo.disabled,
@@ -293,7 +293,8 @@ const GitHub = {
 
     getPage: async ( username: string, page: number ): Promise<IGitHubRepo[]> => {
 
-      const endpoint = Env.GITHUB_TOKEN ? '/user/repos' : `/users/${username}/repos`;
+      const whoami = await GitHub.user.getUsername ();
+      const endpoint = ( whoami === username ) ? '/user/repos' : `/users/${username}/repos`;
       const url = `https://api.${GITHUB_DOMAIN}${endpoint}?page=${page}&per_page=${GITHUB_REPOS_PER_PAGE}&sort=${GITHUB_REPOS_SORT_DIMENSION}&direction=${GITHUB_REPOS_SORT_DIRECTION}&type=${GITHUB_REPOS_TYPE}`;
       const repos = await GitHub.rest.fetch ( 'GET', url );
 
@@ -379,7 +380,9 @@ const GitHub = {
 
   user: {
 
-    getUsername: async (): Promise<string | undefined> => {
+    getUsername: Utils.lang.memoize ( async (): Promise<string | undefined> => {
+
+      if ( !Env.GITHUB_TOKEN ) return;
 
       try {
 
@@ -390,7 +393,7 @@ const GitHub = {
 
       } catch {}
 
-    },
+    }),
 
     whoami: async (): Promise<void> => {
 

@@ -76,6 +76,24 @@ const Utils = {
 
       return true;
 
+    },
+
+    memoize: <T> ( fn: (() => T) ): (() => T) => {
+
+      let cached;
+      let isCached = false;
+
+      return () => {
+
+        if ( isCached ) return cached;
+
+        cached = fn ();
+        isCached = true;
+
+        return cached;
+
+      };
+
     }
 
   },
