@@ -375,35 +375,39 @@ const Local = {
       const repos = await Local.repos.getAll ( true, filter );
       const promises = repos.map ( repo => Local.repo.execSh ( repo.path, command ) );
       const results = await Promise.allSettled ( promises );
+      const data = results.map ( ( result, i ) => ({ repo: repos[i], result }) );
 
-      for ( let i = 0, l = results.length; i < l; i++ ) {
+      /* ERRORS */
 
-        const repo = repos[i];
-        const result = results[i];
+      data.forEach ( ({ repo, result }) => {
 
-        if ( result.status === 'fulfilled' ) {
+        if ( result.status !== 'rejected' ) return;
 
-          console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
+        console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-          if ( result.value ) {
+        if ( result.reason ) {
 
-            console.log ( color.dim ( result.value ) );
-
-          }
-
-        } else {
-
-          console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
-
-          if ( result.reason ) {
-
-            console.log ( color.dim ( `${result.reason}` ) );
-
-          }
+          console.log ( color.dim ( `${result.reason}` ) );
 
         }
 
-      }
+      });
+
+      /* SUCCESSES */
+
+      data.forEach ( ({ repo, result }) => {
+
+        if ( result.status !== 'fulfilled' ) return;
+
+        console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
+
+        if ( result.value ) {
+
+          console.log ( color.dim ( result.value ) );
+
+        }
+
+      });
 
     },
 
