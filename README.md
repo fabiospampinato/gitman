@@ -16,7 +16,7 @@ A simple yet powerful opinionated tool for managing GitHub repositories.
 ## Install
 
 ```sh
-npm install -g @fabiospampinato/gitman
+npm install -g gitman
 ```
 
 ## Configuration

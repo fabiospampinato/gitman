@@ -1,5 +1,5 @@
 {
-  "name": "@fabiospampinato/gitman",
+  "name": "gitman",
   "displayName": "gitman",
   "description": "A simple yet powerful opinionated tool for managing GitHub repositories.",
   "version": "1.4.0",
