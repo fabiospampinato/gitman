@@ -12,7 +12,6 @@ const Symbols = {
   DIRTY: '✱',
 
   ARCHIVED: '(Archived)',
-  DISABLED: '(Disabled)',
   FORK: '(Fork)',
   PRIVATE: '(Private)'
 

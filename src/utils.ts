@@ -1,14 +1,12 @@
 
 /* IMPORT */
 
-import {spawn} from 'child_process';
-import truncate from 'cli-truncate';
-import width from 'cli-width';
-import fs from 'fs';
-import path from 'path';
-import get from 'simple-get';
+import {spawn} from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
 import {color} from 'specialist';
-import {IFilter} from './types';
+import type {IEnv, IFilter} from './types';
 
 /* MAIN */
 
@@ -17,6 +15,13 @@ const Utils = {
   /* BIN API */
 
   bin: {
+
+    enhanceEnv: ( options: IEnv ): void => {
+
+      if ( options.githubToken ) process.env['GITMAN_GITHUB_TOKEN'] = options.githubToken;
+      if ( options.root ) process.env['GITMAN_ROOT'] = path.resolve ( options.root );
+
+    },
 
     makeFilter: ( filter: IFilter ): IFilter => { // Commander pre-initializes these to true, which are interepreted differently by the app
 
@@ -100,7 +105,7 @@ const Utils = {
 
     memoize: <T> ( fn: (() => T) ): (() => T) => {
 
-      let cached;
+      let cached: T;
       let isCached = false;
 
       return () => {
@@ -161,30 +166,6 @@ const Utils = {
     console.log ( color.red ( error ) );
 
     process.exit ( 1 );
-
-  },
-
-  fetch: ( options: { method: string, url: string, body?: string, headers?: Record<string, string> } ): Promise<any> => {
-
-    return new Promise ( ( resolve, reject ) => {
-
-      get.concat ( options, ( error, response, data ) => {
-
-        if ( error ) return reject ( error );
-
-        if ( !/^2\d\d$/.test ( `${response.statusCode}` ) ) return reject ( data.toString () );
-
-        return resolve ( JSON.parse ( data.toString () ) );
-
-      });
-
-    });
-
-  },
-
-  truncate: ( str: string ): string => {
-
-    return truncate ( str, width () );
 
   }
 

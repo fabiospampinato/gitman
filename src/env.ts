@@ -1,9 +1,10 @@
 
 /* IMPORT */
 
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import process from 'node:process';
 
 /* HELPERS */
 
@@ -20,7 +21,7 @@ const Env = {
     if ( GITMAN_ROOT ) return GITMAN_ROOT;
 
     const home = os.homedir ();
-    const targets = ['GitHub', 'github', 'Git', 'git', 'Repositories', 'repositories', 'Repos', 'repos', 'Code', 'code', 'Projects', 'projects'];
+    const targets = ['GitHub', 'github', 'Git', 'git', 'Repositories', 'repositories', 'Repos', 'repos', 'Code', 'code', 'Projects', 'projects', 'Developer', 'developer', 'Dev', 'dev'];
 
     for ( const target of targets ) {
 

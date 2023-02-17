@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {GitHub, Local} from './providers';
-import {IFilter, ILocalRepo} from './types';
+import type {IFilter, ILocalRepo} from './types';
 
 /* MAIN */
 

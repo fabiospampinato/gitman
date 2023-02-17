@@ -1,15 +1,17 @@
 
 /* IMPORT */
 
-import {spawnSync} from 'child_process';
-import fs from 'fs';
-import micromatch from 'micromatch';
-import path from 'path';
+import {spawnSync} from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
 import {color} from 'specialist';
+import truncate from 'tiny-truncate';
+import zeptomatch from 'zeptomatch';
 import Env from '../env';
 import Symbols from '../symbols';
 import Utils from '../utils';
-import {IFilter, ILocalRepo, IManifest} from '../types';
+import type {IFilter, ILocalRepo, IManifest} from '../types';
 
 /* MAIN */
 
@@ -25,7 +27,7 @@ const Local = {
 
       if ( !await Utils.exists ( repoPath ) ) return Utils.fail ( 'Repository not found' );
 
-      const shell = process.env.SHELL;
+      const shell = process.env['SHELL'];
 
       if ( !shell ) return Utils.fail ( 'Unable to find current shell in use' );
 
@@ -131,7 +133,7 @@ const Local = {
 
     matches: ( username: string, name: string, glob: string ): boolean => {
 
-      return micromatch.isMatch ( `${username}/${name}`, glob );
+      return zeptomatch ( glob, `${username}/${name}` );
 
     },
 
@@ -270,7 +272,7 @@ const Local = {
       } catch {
 
         const description = '';
-        const keywords = [];
+        const keywords: string[] = [];
         const isPrivate = false;
 
         return {description, keywords, isPrivate};
@@ -360,7 +362,7 @@ const Local = {
           const isDirty = repo.isDirty ? color.yellow ( Symbols.DIRTY ) : '';
           const ahead = repo.stats.ahead ? color.yellow ( `${repo.stats.ahead}${Symbols.AHEAD}` ) : '';
           const behind = repo.stats.behind ? color.yellow ( `${repo.stats.behind}${Symbols.BEHIND}` ) : '';
-          const line = Utils.truncate ( [fullname, branch, isDirty, ahead, behind, desc].filter ( Utils.lang.identity ).join ( ' ' ) );
+          const line = truncate ( [fullname, branch, isDirty, ahead, behind, desc].filter ( Utils.lang.identity ).join ( ' ' ) );
 
           console.log ( line );
 

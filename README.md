@@ -1,3 +1,4 @@
+
 <p align="center">
   <img src="./resources/logo.png" alt="GitMan logo" width="300">
 </p>
@@ -10,7 +11,7 @@ A simple yet powerful opinionated tool for managing GitHub repositories.
 
 - **Simple**: There's almost nothing to configure and very few commands are provided.
 - **Powerful**: It allows you to clone in bulk repositories easily and execute commands on them.
-- **Tiny**: The entire thing is ~40kb min+gzipped, and only dependencies I personally either maintain or trust are used.
+- **Tiny**: The entire thing is ~40kb min+gzipped, and only dependencies I personally maintain are used.
 - **Beautiful**: All of its power derives from being opinioned about the folder structure where repositories are cloned.
 
 ## Install
@@ -23,8 +24,8 @@ npm install -g gitman
 
 There are only two, optional, pieces of configuration:
 
-- **GitHub token**: a GitHub personal access token, possibly with the `repo` scope enabled, can be provided to avoid rate limits and being able to manage private repositories too. You can set a token by using either the `GITMAN_GITHUB_TOKEN` or `GITHUB_TOKEN` environment variables.
-- **Root path**: the folder path where repositories are cloned. By default the first folder found matching the following is used `~/{GitHub,github,Git,git,Repositories,repositories,Repos,repos,Code,code,Projects,projects}`, otherwise `~/Code` is used. You can set a custom root path via the `GITMAN_ROOT` environment variable.
+- **GitHub token**: a GitHub personal access token, possibly with the `repo` scope enabled, can be provided to avoid rate limits and being able to manage private repositories too. You can set a token by using either the `GITMAN_GITHUB_TOKEN` or `GITHUB_TOKEN` environment variables, or with the `--github-token` option.
+- **Root path**: the folder path where repositories are cloned. By default the first folder found matching the following is used `~/{GitHub,github,Git,git,Repositories,repositories,Repos,repos,Code,code,Projects,projects,Developer,developer,Dev,dev}`, otherwise `~/Code` is used. You can set a custom root path via the `GITMAN_ROOT` environment variable, or with the `--root` option.
 
 The only other thing to remember is that repositories are saved according to the following schema: `$ROOT/username/reponame`, if you want GitMan to recognize manually-created repositories too you must follow that convention.
 
@@ -33,23 +34,29 @@ The only other thing to remember is that repositories are saved according to the
 The following interface is provided:
 
 ```
-Usage: gitman [options] [command]
+gitman 2.0.0
 
-A simple yet powerful opinionated tool for managing GitHub repositories.
+USAGE
 
-Options:
-  -V, --version                   output the version number
-  -h, --help                      display help for command
+  gitman [command]
 
-Commands:
-  cd <repository>                 CD into a local repository
-  clone [options] <repository>    Clone a remote repository
-  ls [options]                    List all known repositories
-  publish [options] <repository>  Publish a local repository to GitHub
-  sh [options] <command>          Execute a shell command in all known repositories
-  sync [options] <repository>     Synchronize all known repositories with GitHub (fetch, description, keywords)
-  whoami                          Output the user associated with the provided GitHub token, if any
-  help [command]                  display help for command
+OPTIONS
+
+  --help                  Display help for the command
+  --version, -v           Display the version number
+  --github-token <token>  GitHub personal access token
+  --root <path>           The folder path where repositories are cloned
+
+COMMANDS
+
+  help [command]        Display help for the command
+  cd <repository>       CD into a local repository
+  clone <repository>    Clone a remote repository
+  ls                    List all known repositories
+  publish <repository>  Publish a local repository to GitHub
+  sh <command>          Execute a shell command in all known repositories
+  sync <repository>     Synchronize all known repositories with GitHub (fetch, description, keywords)
+  whoami                Output the user associated with the provided GitHub token, if any
 ```
 
 The following filtering options are available for most commands:
@@ -59,7 +66,7 @@ The following filtering options are available for most commands:
 --no-forks            Ignore forked repositories
 --no-private          Ignore private repositories
 --no-public           Ignore public repositories
--i, --include <glob>  Include only repositories matching this glob
+--include, -i <glob>  Include only repositories matching this glob
 ```
 
 ## Examples
@@ -175,7 +182,6 @@ gitman whoami
 ## Related
 
 - **[GitMan for VSCode](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-gitman)**: The official companion extension for vscode, for switching to repositories quickly.
-- **[Autogit](https://github.com/fabiospampinato/autogit)**: Another similar tool I wrote, which is extendable but much less convenient to set up.
 - **[Projects+](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-projects-plus)**: A VSCode extension I wrote for switching quickly between projects, it requires some manual configuration though.
 
 ## License

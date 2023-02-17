@@ -1,6 +1,11 @@
 
 /* MAIN */
 
+type IEnv = {
+  githubToken?: string,
+  root?: string,
+};
+
 type IFilter = {
   archived?: boolean,
   forks?: boolean,
@@ -58,4 +63,4 @@ type IManifest = {
 
 /* EXPORT */
 
-export {IFilter, IGitHubRepoRaw, IGitHubRepo, ILocalRepo, IManifest};
+export type {IEnv, IFilter, IGitHubRepoRaw, IGitHubRepo, ILocalRepo, IManifest};

@@ -1,14 +1,14 @@
 
 /* IMPORT */
 
-import micromatch from 'micromatch';
 import {color} from 'specialist';
-import {displayName, version} from '../../package.json';
+import truncate from 'tiny-truncate';
+import zeptomatch from 'zeptomatch';
 import {GITHUB_DOMAIN, GITHUB_REPOS_PER_PAGE, GITHUB_REPOS_SORT_DIMENSION, GITHUB_REPOS_SORT_DIRECTION, GITHUB_REPOS_TYPE} from '../constants';
 import Env from '../env';
 import Symbols from '../symbols';
 import Utils from '../utils';
-import {IFilter, IGitHubRepoRaw, IGitHubRepo} from '../types';
+import type {IFilter, IGitHubRepoRaw, IGitHubRepo} from '../types';
 import Local from './local'
 
 /* MAIN */
@@ -32,12 +32,17 @@ const GitHub = {
       try {
 
         const url = `https://api.${GITHUB_DOMAIN}/repos/${username}/${name}`;
-        const repoRaw = await GitHub.rest.fetch ( 'GET', url );
-        const repo = GitHub.repo.parse ( repoRaw );
+        const response = await GitHub.rest.fetch ( 'GET', url );
+        const json = await response.json ();
+        const repo = GitHub.repo.parse ( json );
 
         return repo;
 
-      } catch {}
+      } catch {
+
+        return;
+
+      }
 
     },
 
@@ -49,7 +54,7 @@ const GitHub = {
 
     matches: ( username: string, name: string, glob: string ): boolean => {
 
-      return micromatch.isMatch ( `${username}/${name}`, glob );
+      return zeptomatch ( glob, `${username}/${name}` );
 
     },
 
@@ -296,9 +301,10 @@ const GitHub = {
       const whoami = await GitHub.user.getUsername ();
       const endpoint = ( whoami === username ) ? '/user/repos' : `/users/${username}/repos`;
       const url = `https://api.${GITHUB_DOMAIN}${endpoint}?page=${page}&per_page=${GITHUB_REPOS_PER_PAGE}&sort=${GITHUB_REPOS_SORT_DIMENSION}&direction=${GITHUB_REPOS_SORT_DIRECTION}&type=${GITHUB_REPOS_TYPE}`;
-      const repos = await GitHub.rest.fetch ( 'GET', url );
+      const response = await GitHub.rest.fetch ( 'GET', url );
+      const json = await response.json ();
 
-      return repos.map ( GitHub.repo.parse );
+      return json.map ( GitHub.repo.parse );
 
     },
 
@@ -319,7 +325,7 @@ const GitHub = {
           const isArchived = repo.isArchived ? color.yellow ( Symbols.ARCHIVED ) : '';
           const isFork = repo.isFork ? color.magenta ( Symbols.FORK ) : '';
           const isPrivate = repo.isPrivate ? color.red ( Symbols.PRIVATE ) : '';
-          const line = Utils.truncate ( [name, isFork, isArchived, isPrivate, desc].filter ( Utils.lang.identity ).join ( ' ' ) );
+          const line = truncate ( [name, isFork, isArchived, isPrivate, desc].filter ( Utils.lang.identity ).join ( ' ' ) );
 
           console.log ( line );
 
@@ -359,16 +365,15 @@ const GitHub = {
 
   rest: {
 
-    fetch: async ( method: string, url: string, body?: string ): Promise<any> => {
+    fetch: async ( method: string, url: string, body: string | null = null ): Promise<Response> => {
 
-      return Utils.fetch ({
+      return fetch ( url, {
         method,
-        url,
         body,
         headers: {
-          Accept : 'application/vnd.github.v3+json',
-          Authorization: `token ${Env.GITHUB_TOKEN}`,
-          'User-Agent': `${displayName}/v${version}`
+          'Accept': 'application/vnd.github.v3+json',
+          'Authorization': `token ${Env.GITHUB_TOKEN}`,
+          'User-Agent': `Secret/v2`
         }
       });
 
@@ -387,11 +392,16 @@ const GitHub = {
       try {
 
         const url = `https://api.${GITHUB_DOMAIN}/user`;
-        const user = await GitHub.rest.fetch ( 'GET', url );
+        const response = await GitHub.rest.fetch ( 'GET', url );
+        const json = await response.json ();
 
-        return user.login;
+        return json.login;
 
-      } catch {}
+      } catch {
+
+        return;
+
+      }
 
     }),
 
