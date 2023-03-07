@@ -71,6 +71,12 @@ const Utils = {
 
   lang: { //TODO: Replace these with nanodash
 
+    castArray: <T> ( value: T | T[] ): T[] => {
+
+      return Array.isArray ( value ) ? value : [value];
+
+    },
+
     identity: <T> ( value: T ): T => {
 
       return value;

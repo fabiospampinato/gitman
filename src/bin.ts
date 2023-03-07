@@ -12,6 +12,18 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   /* DEFAULT OPTIONS */
   .option ( '--github-token <token>', 'GitHub personal access token' )
   .option ( '--root <path>', 'The folder path where repositories are cloned' )
+  /* BACKUP */
+  .command ( 'backup', 'Backup all repositories of the provided users' )
+  .option ( '--no-archived', 'Ignore archived repositories' )
+  .option ( '--no-forks', 'Ignore forked repositories' )
+  .option ( '--no-private', 'Ignore private repositories' )
+  .option ( '--no-public', 'Ignore public repositories' )
+  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
+  .argument ( '<users...>', 'The users to clone repositories from' )
+  .action ( ( options, args ) => {
+    Utils.bin.enhanceEnv ( options );
+    return GitMan.backup ( args, Utils.bin.makeFilter ( options ) );
+  })
   /* CD */
   .command ( 'cd', 'CD into a local repository' )
   .argument ( '<repository>', 'The repository to CD into' )

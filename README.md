@@ -50,6 +50,7 @@ OPTIONS
 COMMANDS
 
   help [command]        Display help for the command
+  backup <users...>     Backup all repositories of the provided users
   cd <repository>       CD into a local repository
   clone <repository>    Clone a remote repository
   ls                    List all known repositories

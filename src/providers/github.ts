@@ -239,15 +239,21 @@ const GitHub = {
 
   repos: {
 
-    clone: async ( username: string, filter?: IFilter ): Promise<void> => {
+    clone: async ( username: string | string[], filter?: IFilter ): Promise<void> => {
 
-      const names = await GitHub.repos.getNames ( username, filter );
+      const usernames = Utils.lang.castArray ( username );
 
-      await Promise.all ( names.map ( async name => {
+      for ( const username of usernames ) {
 
-        await GitHub.repo.clone ( username, name );
+        const names = await GitHub.repos.getNames ( username, filter );
 
-      }));
+        await Promise.all ( names.map ( async name => {
+
+          await GitHub.repo.clone ( username, name );
+
+        }));
+
+      }
 
     },
 

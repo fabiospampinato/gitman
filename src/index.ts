@@ -1,6 +1,8 @@
 
 /* IMPORT */
 
+import path from 'node:path';
+import Env from './env';
 import {GitHub, Local} from './providers';
 import type {IFilter, ILocalRepo} from './types';
 
@@ -9,6 +11,17 @@ import type {IFilter, ILocalRepo} from './types';
 const GitMan = {
 
   /* API */
+
+  backup: async ( usernames: string[], filter?: IFilter ): Promise<void> => {
+
+    const timestamp = new Date ().toISOString ().slice ( 0, 10 );
+    const folder = `gitman-backup_${timestamp}`;
+
+    Env.ROOT_PATH = path.join ( Env.ROOT_PATH, folder );
+
+    await GitHub.repos.clone ( usernames, filter );
+
+  },
 
   cd: async ( username: string, name: string ): Promise<void> => {
 
