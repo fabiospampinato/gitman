@@ -8,6 +8,8 @@ type IEnv = {
 
 type IFilter = {
   archived?: boolean,
+  clean?: boolean,
+  dirty?: boolean,
   forks?: boolean,
   private?: boolean,
   public?: boolean,
@@ -47,6 +49,7 @@ type ILocalRepo = {
   keywords: string[],
   branch: string,
   isDirty: boolean,
+  isSynced: boolean,
   isPrivate: boolean,
   isPublic: boolean,
   stats: {

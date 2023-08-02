@@ -23,14 +23,16 @@ const Utils = {
 
     },
 
-    makeFilter: ( filter: IFilter ): IFilter => { // Commander pre-initializes these to true, which are interepreted differently by the app
+    makeFilter: ( filter: IFilter ): IFilter => {
 
-      if ( filter.archived ) delete filter.archived;
-      if ( filter.forks ) delete filter.forks;
-      if ( filter.private ) delete filter.private;
-      if ( filter.public ) delete filter.public;
-
-      return filter;
+      return { // Explicitly filtering out potentially extraneous properties
+        archived: filter.archived,
+        clean: filter.clean,
+        dirty: filter.dirty,
+        forks: filter.forks,
+        private: filter.private,
+        public: filter.public
+      };
 
     },
 

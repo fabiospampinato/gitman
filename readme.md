@@ -64,6 +64,8 @@ The following filtering options are available for most commands:
 
 ```
 --no-archived         Ignore archived repositories
+--no-clean            Ignore clean repositories
+--no-dirty            Ignore dirty repositories
 --no-forks            Ignore forked repositories
 --no-private          Ignore private repositories
 --no-public           Ignore public repositories
@@ -106,6 +108,18 @@ List all locally cloned repositories, this provides some useful information abou
 
 ```
 gitman ls
+```
+
+List all locally cloned repositories that have uncommitted changes:
+
+```
+gitman --no-clean
+```
+
+List all locally cloned repositories that don't have uncommitted changes:
+
+```
+gitman --no-dirty
 ```
 
 List all locally cloned repositories as JSON, useful for third-party tools integrations:

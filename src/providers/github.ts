@@ -264,6 +264,8 @@ const GitHub = {
       return repos.filter ( repo => {
 
         if ( Utils.lang.isBoolean ( filter.archived ) && repo.isArchived !== filter.archived ) return false;
+        if ( Utils.lang.isBoolean ( filter.clean ) ) Utils.fail ( 'Unsupported remote filter: "clean"' );
+        if ( Utils.lang.isBoolean ( filter.dirty ) ) Utils.fail ( 'Unsupported remote filter: "dirty"' );
         if ( Utils.lang.isBoolean ( filter.forks ) && repo.isFork !== filter.forks ) return false;
         if ( Utils.lang.isBoolean ( filter.private ) && repo.isPrivate !== filter.private ) return false;
         if ( Utils.lang.isBoolean ( filter.public ) && repo.isPublic !== filter.public ) return false;

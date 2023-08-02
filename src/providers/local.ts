@@ -158,6 +158,7 @@ const Local = {
         keywords,
         branch,
         isDirty,
+        isSynced: !isDirty && !ahead && !behind,
         isPrivate,
         isPublic: !isPrivate,
         stats: {
@@ -181,6 +182,7 @@ const Local = {
         keywords,
         branch: '',
         isDirty: false,
+        isSynced: true,
         isPrivate,
         isPublic: !isPrivate,
         stats: {
@@ -294,6 +296,8 @@ const Local = {
       return repos.filter ( repo => {
 
         if ( Utils.lang.isBoolean ( filter.archived ) ) Utils.fail ( 'Unsupported local filter: "archived"' ); //TODO: Implement this filter
+        if ( Utils.lang.isBoolean ( filter.clean ) && repo.isSynced === !filter.clean ) return false;
+        if ( Utils.lang.isBoolean ( filter.dirty ) && repo.isSynced === filter.dirty ) return false;
         if ( Utils.lang.isBoolean ( filter.forks ) ) Utils.fail ( 'Unsupported local filter: "forks"' ); //TODO: Implement this filter
         if ( Utils.lang.isBoolean ( filter.private ) && repo.isPrivate !== filter.private ) return false;
         if ( Utils.lang.isBoolean ( filter.public ) && repo.isPublic !== filter.public ) return false;
