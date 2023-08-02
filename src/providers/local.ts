@@ -211,7 +211,7 @@ const Local = {
 
     parseMetadataGitAheadBehind: async ( repoPath: string ): Promise<{ ahead: number, behind: number }> => {
 
-      const stdout = await Local.repo.execSh ( repoPath, 'git rev-list --left-right --count HEAD...@{u}' );
+      const stdout = await Local.repo.execGit ( repoPath, ['rev-list', '--left-right', '--count', 'HEAD...@{u}'] );
 
       const match = /(\d+).*(\d+)/.exec ( stdout );
 
