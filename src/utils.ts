@@ -5,7 +5,7 @@ import {spawn} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import {color} from 'specialist';
+import {exit} from 'specialist';
 import type {IEnv, IFilter} from './types';
 
 /* MAIN */
@@ -40,9 +40,9 @@ const Utils = {
 
       const match = /^([a-z0-9_-]+)\/([a-z0-9_-]+|\*)$/i.exec ( string );
 
-      if ( !match ) throw Utils.fail ( 'Repository excepted in the "username/repository" format' );
+      if ( !match ) exit ( 'Repository excepted in the "username/repository" format' );
 
-      if ( !allowStar && match[2] === '*' ) throw Utils.fail ( 'The "username/*" format is unsupported' );
+      if ( !allowStar && match[2] === '*' ) exit ( 'The "username/*" format is unsupported' );
 
       return [match[1], match[2]];
 
@@ -166,14 +166,6 @@ const Utils = {
   exists: ( targetPath: string ): Promise<boolean> => {
 
     return fs.promises.access ( targetPath ).then ( () => true, () => false );
-
-  },
-
-  fail: ( error: string ): never => {
-
-    console.log ( color.red ( error ) );
-
-    process.exit ( 1 );
 
   }
 

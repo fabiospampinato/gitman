@@ -5,7 +5,7 @@ import {spawnSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import {color} from 'specialist';
+import {color, exit} from 'specialist';
 import truncate from 'tiny-truncate';
 import zeptomatch from 'zeptomatch';
 import Env from '../env';
@@ -25,11 +25,11 @@ const Local = {
 
       const repoPath = path.join ( Env.ROOT_PATH, username, name );
 
-      if ( !await Utils.exists ( repoPath ) ) return Utils.fail ( 'Repository not found' );
+      if ( !await Utils.exists ( repoPath ) ) return exit ( 'Repository not found' );
 
       const shell = process.env['SHELL'];
 
-      if ( !shell ) return Utils.fail ( 'Unable to find current shell in use' );
+      if ( !shell ) return exit ( 'Unable to find current shell in use' );
 
       spawnSync ( shell, { // Spawning a sub-shell at path
         cwd: repoPath,
@@ -114,7 +114,7 @@ const Local = {
 
     get: async ( username: string, name: string, minimal?: boolean ): Promise<ILocalRepo> => {
 
-      if ( !await Local.repo.existsGit ( username, name ) ) Utils.fail ( 'Repository not found' );
+      if ( !await Local.repo.existsGit ( username, name ) ) exit ( 'Repository not found' );
 
       try {
 
@@ -125,7 +125,7 @@ const Local = {
 
       } catch {
 
-        throw Utils.fail ( 'Repository not found' );
+        exit ( 'Repository not found' );
 
       }
 
@@ -295,10 +295,10 @@ const Local = {
 
       return repos.filter ( repo => {
 
-        if ( Utils.lang.isBoolean ( filter.archived ) ) Utils.fail ( 'Unsupported local filter: "archived"' ); //TODO: Implement this filter
+        if ( Utils.lang.isBoolean ( filter.archived ) ) exit ( 'Unsupported local filter: "archived"' ); //TODO: Implement this filter
         if ( Utils.lang.isBoolean ( filter.clean ) && repo.isSynced === !filter.clean ) return false;
         if ( Utils.lang.isBoolean ( filter.dirty ) && repo.isSynced === filter.dirty ) return false;
-        if ( Utils.lang.isBoolean ( filter.forks ) ) Utils.fail ( 'Unsupported local filter: "forks"' ); //TODO: Implement this filter
+        if ( Utils.lang.isBoolean ( filter.forks ) ) exit ( 'Unsupported local filter: "forks"' ); //TODO: Implement this filter
         if ( Utils.lang.isBoolean ( filter.private ) && repo.isPrivate !== filter.private ) return false;
         if ( Utils.lang.isBoolean ( filter.public ) && repo.isPublic !== filter.public ) return false;
         if ( Utils.lang.isString ( filter.include ) && !Local.repo.matches ( repo.user, repo.name, filter.include ) ) return false;

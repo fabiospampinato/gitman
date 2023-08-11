@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {color} from 'specialist';
+import {color, exit} from 'specialist';
 import truncate from 'tiny-truncate';
 import zeptomatch from 'zeptomatch';
 import {GITHUB_DOMAIN, GITHUB_REPOS_PER_PAGE, GITHUB_REPOS_SORT_DIMENSION, GITHUB_REPOS_SORT_DIRECTION, GITHUB_REPOS_TYPE} from '../constants';
@@ -264,8 +264,8 @@ const GitHub = {
       return repos.filter ( repo => {
 
         if ( Utils.lang.isBoolean ( filter.archived ) && repo.isArchived !== filter.archived ) return false;
-        if ( Utils.lang.isBoolean ( filter.clean ) ) Utils.fail ( 'Unsupported remote filter: "clean"' );
-        if ( Utils.lang.isBoolean ( filter.dirty ) ) Utils.fail ( 'Unsupported remote filter: "dirty"' );
+        if ( Utils.lang.isBoolean ( filter.clean ) ) exit ( 'Unsupported remote filter: "clean"' );
+        if ( Utils.lang.isBoolean ( filter.dirty ) ) exit ( 'Unsupported remote filter: "dirty"' );
         if ( Utils.lang.isBoolean ( filter.forks ) && repo.isFork !== filter.forks ) return false;
         if ( Utils.lang.isBoolean ( filter.private ) && repo.isPrivate !== filter.private ) return false;
         if ( Utils.lang.isBoolean ( filter.public ) && repo.isPublic !== filter.public ) return false;
@@ -415,7 +415,7 @@ const GitHub = {
 
     whoami: async (): Promise<void> => {
 
-      if ( !Env.GITHUB_TOKEN ) throw Utils.fail ( 'No "GITMAN_GITHUB_TOKEN" nor "GITHUB_TOKEN" environment variables provided!' );
+      if ( !Env.GITHUB_TOKEN ) exit ( 'No "GITMAN_GITHUB_TOKEN" nor "GITHUB_TOKEN" environment variables provided!' );
 
       const username = await GitHub.user.getUsername ();
 
@@ -425,7 +425,7 @@ const GitHub = {
 
       } else {
 
-        Utils.fail ( 'Token not associated with any user, it\'s probably invalid!' );
+        exit ( 'Token not associated with any user, it\'s probably invalid!' );
 
       }
 

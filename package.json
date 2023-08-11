@@ -28,7 +28,7 @@
     "app"
   ],
   "dependencies": {
-    "specialist": "^1.2.0",
+    "specialist": "^1.3.0",
     "tiny-truncate": "^1.0.2",
     "zeptomatch": "^1.1.3"
   },
