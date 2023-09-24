@@ -164,6 +164,12 @@ Execute a command and get the output as JSON:
 gitman sh 'cat package.json | grep typescript' --json
 ```
 
+Execute a command, listing the unpacked size of NPM dependencies, and get a sorted output:
+
+```
+gitman sh 'npm view --json | jq .dist.unpackedSize' --sort
+```
+
 Publish a repository:
 
 ```

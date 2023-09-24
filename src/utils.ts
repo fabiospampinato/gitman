@@ -127,6 +127,14 @@ const Utils = {
 
       };
 
+    },
+
+    naturalSort: <T> ( values: T[], fn: ( value: T ) => string ): T[] => {
+
+      const collator = new Intl.Collator ( undefined, { usage: 'sort', sensitivity: 'accent', numeric: true } );
+
+      return [...values].sort ( ( a, b ) => collator.compare ( fn ( a ), fn ( b ) ) );
+
     }
 
   },

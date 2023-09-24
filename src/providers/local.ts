@@ -376,7 +376,7 @@ const Local = {
 
     },
 
-    sh: async ( command: string, json?: boolean, filter?: IFilter ): Promise<void> => {
+    sh: async ( command: string, json?: boolean, sort?: boolean, filter?: IFilter ): Promise<void> => {
 
       const repos = await Local.repos.getAll ( true, filter );
       const promises = repos.map ( repo => Local.repo.execSh ( repo.path, command ) );
@@ -397,9 +397,20 @@ const Local = {
 
       } else {
 
+        const sorted = ( values: { repo: ILocalRepo, result: PromiseSettledResult<string> }[] ) => {
+          if ( !sorted ) return values;
+          return Utils.lang.naturalSort ( values, value => {
+            if ( value.result.status === 'rejected' ) {
+              return String ( value.result.reason );
+            } else {
+              return value.result.value;
+            }
+          });
+        };
+
         /* ERRORS */
 
-        data.forEach ( ({ repo, result }) => {
+        sorted ( data ).forEach ( ({ repo, result }) => {
 
           if ( result.status !== 'rejected' ) return;
 
@@ -415,7 +426,7 @@ const Local = {
 
         /* SUCCESSES */
 
-        data.forEach ( ({ repo, result }) => {
+        sorted ( data ).forEach ( ({ repo, result }) => {
 
           if ( result.status !== 'fulfilled' ) return;
 

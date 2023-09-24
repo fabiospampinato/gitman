@@ -95,10 +95,11 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .option ( '-j, --json', 'Output the results as JSON' )
+  .option ( '--sort', 'Output the results in a sorted order' )
   .argument ( '<command>', 'The shell command to execute' )
   .action ( ( options, commands ) => {
     Utils.bin.enhanceEnv ( options );
-    return GitMan.sh ( commands[0], !!options['json'], Utils.bin.makeFilter ( options ) );
+    return GitMan.sh ( commands[0], !!options['json'], !!options['sort'], Utils.bin.makeFilter ( options ) );
   })
   /* SYNC */
   .command ( 'sync', 'Synchronize all known repositories with GitHub (fetch, description, keywords)' )
