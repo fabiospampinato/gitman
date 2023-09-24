@@ -31,7 +31,8 @@ const Utils = {
         dirty: filter.dirty,
         forks: filter.forks,
         private: filter.private,
-        public: filter.public
+        public: filter.public,
+        include: filter.include
       };
 
     },
