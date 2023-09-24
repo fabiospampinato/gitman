@@ -67,9 +67,9 @@ const GitMan = {
 
   },
 
-  sh: async ( command: string, filter?: IFilter ): Promise<void> => {
+  sh: async ( command: string, json?: boolean, filter?: IFilter ): Promise<void> => {
 
-    return Local.repos.sh ( command, filter );
+    return Local.repos.sh ( command, json, filter );
 
   },
 

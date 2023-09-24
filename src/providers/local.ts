@@ -376,44 +376,60 @@ const Local = {
 
     },
 
-    sh: async ( command: string, filter?: IFilter ): Promise<void> => {
+    sh: async ( command: string, json?: boolean, filter?: IFilter ): Promise<void> => {
 
       const repos = await Local.repos.getAll ( true, filter );
       const promises = repos.map ( repo => Local.repo.execSh ( repo.path, command ) );
       const results = await Promise.allSettled ( promises );
       const data = results.map ( ( result, i ) => ({ repo: repos[i], result }) );
 
-      /* ERRORS */
+      if ( json ) {
 
-      data.forEach ( ({ repo, result }) => {
+        const results = data.map ( ({ repo, result }) => {
+          if ( result.status === 'rejected' ) {
+            return { repo, error: String ( result.reason ) };
+          } else {
+            return { repo, result: result.value };
+          }
+        });
 
-        if ( result.status !== 'rejected' ) return;
+        console.log ( JSON.stringify ( results ) );
 
-        console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
+      } else {
 
-        if ( result.reason ) {
+        /* ERRORS */
 
-          console.log ( color.dim ( `${result.reason}` ) );
+        data.forEach ( ({ repo, result }) => {
 
-        }
+          if ( result.status !== 'rejected' ) return;
 
-      });
+          console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-      /* SUCCESSES */
+          if ( result.reason ) {
 
-      data.forEach ( ({ repo, result }) => {
+            console.log ( color.dim ( `${result.reason}` ) );
 
-        if ( result.status !== 'fulfilled' ) return;
+          }
 
-        console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
+        });
 
-        if ( result.value ) {
+        /* SUCCESSES */
 
-          console.log ( color.dim ( result.value ) );
+        data.forEach ( ({ repo, result }) => {
 
-        }
+          if ( result.status !== 'fulfilled' ) return;
 
-      });
+          console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
+
+          if ( result.value ) {
+
+            console.log ( color.dim ( result.value ) );
+
+          }
+
+        });
+
+      }
 
     },
 

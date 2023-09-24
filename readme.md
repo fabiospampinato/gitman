@@ -158,6 +158,12 @@ Execute a command on a subset of locally cloned repositories:
 gitman sh -i '**/vscode-*' 'git fetch && echo "Something"'
 ```
 
+Execute a command and get the output as JSON:
+
+```
+gitman sh 'cat package.json | grep typescript' --json
+```
+
 Publish a repository:
 
 ```
