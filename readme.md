@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="./resources/logo.png" alt="GitMan logo" width="300">
+  <img src="./resources/banner.png" alt="GitMan's Banner" width="640px" height="320px">
 </p>
 
 # GitMan
