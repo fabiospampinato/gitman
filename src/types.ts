@@ -34,6 +34,7 @@ type IGitHubRepo = {
     forks: number,
     issues: number,
     stargazers: number,
+    watchers: number,
     created: Date,
     pushed: Date,
     updated: Date

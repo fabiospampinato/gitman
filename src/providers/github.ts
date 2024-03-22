@@ -76,6 +76,7 @@ const GitHub = {
           forks: repo.forks_count,
           issues: repo.open_issues_count,
           stargazers: repo.stargazers_count,
+          watchers: repo.watchers_count,
           created: new Date ( repo.created_at ),
           pushed: new Date ( repo.pushed_at ),
           updated: new Date ( repo.updated_at )
