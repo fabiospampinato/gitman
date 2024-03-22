@@ -2,7 +2,7 @@
   "name": "gitman",
   "repository": "github:fabiospampinato/gitman",
   "description": "A simple yet powerful opinionated tool for managing GitHub repositories.",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "type": "module",
   "bin": "dist/bin.js",
   "main": "dist/index.js",
