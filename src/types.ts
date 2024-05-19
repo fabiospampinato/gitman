@@ -10,9 +10,11 @@ type IFilter = {
   archived?: boolean,
   clean?: boolean,
   dirty?: boolean,
+  errors?: boolean,
   forks?: boolean,
   private?: boolean,
   public?: boolean,
+  successes?: boolean,
   exclude?: string,
   include?: string
 };

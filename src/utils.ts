@@ -29,9 +29,11 @@ const Utils = {
         archived: filter.archived,
         clean: filter.clean,
         dirty: filter.dirty,
+        errors: filter.errors,
         forks: filter.forks,
         private: filter.private,
         public: filter.public,
+        successes: filter.successes,
         exclude: filter.exclude,
         include: filter.include
       };

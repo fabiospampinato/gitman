@@ -411,35 +411,43 @@ const Local = {
 
         /* ERRORS */
 
-        sorted ( data ).forEach ( ({ repo, result }) => {
+        if ( filter?.errors !== false ) {
 
-          if ( result.status !== 'rejected' ) return;
+          sorted ( data ).forEach ( ({ repo, result }) => {
 
-          console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
+            if ( result.status !== 'rejected' ) return;
 
-          if ( result.reason ) {
+            console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-            console.log ( color.dim ( `${result.reason}` ) );
+            if ( result.reason ) {
 
-          }
+              console.log ( color.dim ( `${result.reason}` ) );
 
-        });
+            }
+
+          });
+
+        }
 
         /* SUCCESSES */
 
-        sorted ( data ).forEach ( ({ repo, result }) => {
+        if ( filter?.successes !== false ) {
 
-          if ( result.status !== 'fulfilled' ) return;
+          sorted ( data ).forEach ( ({ repo, result }) => {
 
-          console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
+            if ( result.status !== 'fulfilled' ) return;
 
-          if ( result.value ) {
+            console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-            console.log ( color.dim ( result.value ) );
+            if ( result.value ) {
 
-          }
+              console.log ( color.dim ( result.value ) );
 
-        });
+            }
+
+          });
+
+        }
 
       }
 
