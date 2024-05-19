@@ -32,6 +32,7 @@ const Utils = {
         forks: filter.forks,
         private: filter.private,
         public: filter.public,
+        exclude: filter.exclude,
         include: filter.include
       };
 

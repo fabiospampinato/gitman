@@ -18,6 +18,7 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
+  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .argument ( '<users...>', 'The users to clone repositories from' )
   .action ( ( options, args ) => {
@@ -38,6 +39,7 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
+  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .argument ( '<repository>', 'The repository to CD into' )
   .action ( ( options, args ) => {
@@ -57,6 +59,7 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
+  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .option ( '-j, --json', 'Output repositories as JSON' )
   .option ( '-m, --minimal', 'Include only minimal, quick to retrieve, data for each repository' )
@@ -74,6 +77,7 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
+  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .argument ( '<repository>', 'The repository to CD into' )
   .action ( ( options, args ) => {
@@ -93,6 +97,7 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
+  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .option ( '-j, --json', 'Output the results as JSON' )
   .option ( '--sort', 'Output the results in a sorted order' )
@@ -109,6 +114,7 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
+  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
   .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
   .argument ( '<repository>', 'The repository to CD into' )
   .action ( ( options, args ) => {

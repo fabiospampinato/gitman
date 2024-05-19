@@ -69,6 +69,7 @@ The following filtering options are available for most commands:
 --no-forks            Ignore forked repositories
 --no-private          Ignore private repositories
 --no-public           Ignore public repositories
+--exclude, -e <glob>  Exclude repositories matching this glob
 --include, -i <glob>  Include only repositories matching this glob
 ```
 
@@ -202,7 +203,7 @@ gitman whoami
 
 ## Tips
 
-- The `include` glob is matched against the full repository identifier (e.g. username/reponame), therefor most of the times your glob should probably look something like this: `**/foo-*`.
+- The `exclude` and `include` globs are matched against the full repository identifier (e.g. username/reponame), therefor most of the times your glob should probably look something like this: `**/foo-*`.
 - GitMan will generally output nothing (except in `--json` mode) if there are no targeted repositories for your command (i.e. user with no repositories, no locally cloned repositories, using filters that exclude everything etc.).
 - GitMan works with any kind of git repository, but it's especially suited for NPM packages, since it's able to extract a description, keywords, and private status from them.
 

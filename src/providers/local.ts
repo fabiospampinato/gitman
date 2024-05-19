@@ -301,6 +301,7 @@ const Local = {
         if ( Utils.lang.isBoolean ( filter.forks ) ) exit ( 'Unsupported local filter: "forks"' ); //TODO: Implement this filter
         if ( Utils.lang.isBoolean ( filter.private ) && repo.isPrivate !== filter.private ) return false;
         if ( Utils.lang.isBoolean ( filter.public ) && repo.isPublic !== filter.public ) return false;
+        if ( Utils.lang.isString ( filter.exclude ) && Local.repo.matches ( repo.user, repo.name, filter.exclude ) ) return false;
         if ( Utils.lang.isString ( filter.include ) && !Local.repo.matches ( repo.user, repo.name, filter.include ) ) return false;
 
         return true;

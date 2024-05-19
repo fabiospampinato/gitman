@@ -13,6 +13,7 @@ type IFilter = {
   forks?: boolean,
   private?: boolean,
   public?: boolean,
+  exclude?: string,
   include?: string
 };
 
