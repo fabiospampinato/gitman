@@ -419,7 +419,7 @@ const Local = {
 
             console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-            if ( result.reason ) {
+            if ( filter?.output !== false && result.reason ) {
 
               console.log ( color.dim ( `${result.reason}` ) );
 
@@ -439,7 +439,7 @@ const Local = {
 
             console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
-            if ( result.value ) {
+            if ( filter?.output !== false && result.value ) {
 
               console.log ( color.dim ( result.value ) );
 

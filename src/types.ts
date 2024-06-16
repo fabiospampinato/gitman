@@ -12,6 +12,7 @@ type IFilter = {
   dirty?: boolean,
   errors?: boolean,
   forks?: boolean,
+  output?: boolean,
   private?: boolean,
   public?: boolean,
   successes?: boolean,

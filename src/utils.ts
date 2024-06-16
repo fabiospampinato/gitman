@@ -31,6 +31,7 @@ const Utils = {
         dirty: filter.dirty,
         errors: filter.errors,
         forks: filter.forks,
+        output: filter.output,
         private: filter.private,
         public: filter.public,
         successes: filter.successes,
