@@ -399,7 +399,7 @@ const Local = {
       } else {
 
         const sorted = ( values: { repo: ILocalRepo, result: PromiseSettledResult<string> }[] ) => {
-          if ( !sorted ) return values;
+          if ( !sort ) return values;
           return Utils.lang.naturalSort ( values, value => {
             if ( value.result.status === 'rejected' ) {
               return String ( value.result.reason );
