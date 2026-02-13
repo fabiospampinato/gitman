@@ -3,7 +3,7 @@
   "repository": "github:fabiospampinato/gitman",
   "description": "A simple yet powerful opinionated tool for managing GitHub repositories.",
   "license": "MIT",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "type": "module",
   "bin": "dist/bin.js",
   "main": "dist/index.js",
