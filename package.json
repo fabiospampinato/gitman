@@ -29,13 +29,13 @@
     "app"
   ],
   "dependencies": {
-    "specialist": "^1.3.0",
-    "tiny-truncate": "^1.0.2",
-    "zeptomatch": "^1.1.3"
+    "specialist": "^2.0.0",
+    "tiny-truncate": "^1.0.5",
+    "zeptomatch": "^2.1.0"
   },
   "devDependencies": {
-    "@types/node": "^20.4.10",
-    "tsex": "^3.0.1",
-    "typescript": "^5.1.6"
+    "@types/node": "^18.19.130",
+    "tsex": "^4.0.2",
+    "typescript": "^5.9.3"
   }
 }
