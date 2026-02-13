@@ -29,6 +29,7 @@ const Utils = {
         archived: filter.archived,
         clean: filter.clean,
         dirty: filter.dirty,
+        empty: filter.empty,
         errors: filter.errors,
         forks: filter.forks,
         output: filter.output,

@@ -10,6 +10,7 @@ type IFilter = {
   archived?: boolean,
   clean?: boolean,
   dirty?: boolean,
+  empty?: boolean,
   errors?: boolean,
   forks?: boolean,
   output?: boolean,

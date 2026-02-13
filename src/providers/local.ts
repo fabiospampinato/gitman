@@ -417,6 +417,8 @@ const Local = {
 
             if ( result.status !== 'rejected' ) return;
 
+            if ( filter?.empty === false && !result.reason ) return;
+
             console.log ( `${color.red ( Symbols.ERROR )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 
             if ( filter?.output !== false && result.reason ) {
@@ -436,6 +438,8 @@ const Local = {
           sorted ( data ).forEach ( ({ repo, result }) => {
 
             if ( result.status !== 'fulfilled' ) return;
+
+            if ( filter?.empty === false && !result.value ) return;
 
             console.log ( `${color.green ( Symbols.SUCCESS )} ${color.cyan ( `${repo.user}/${repo.name}` )}` );
 

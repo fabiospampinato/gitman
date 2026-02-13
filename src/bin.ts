@@ -94,6 +94,7 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-archived', 'Ignore archived repositories', { default: undefined } )
   .option ( '--no-clean', 'Ignore clean repositories', { default: undefined } )
   .option ( '--no-dirty', 'Ignore dirty repositories', { default: undefined } )
+  .option ( '--no-empty', 'Ignore repositories with no output', { default: undefined } )
   .option ( '--no-errors', 'Ignore unsuccessful commands', { default: undefined } )
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-output', 'Ignore the output of the command', { default: undefined } )
