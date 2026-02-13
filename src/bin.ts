@@ -18,8 +18,8 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
-  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
-  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
+  .option ( '--exclude, -e <glob>', 'Exclude repositories matching this glob' )
+  .option ( '--include, -i <glob>', 'Include only repositories matching this glob' )
   .argument ( '<users...>', 'The users to clone repositories from' )
   .action ( ( options, args ) => {
     Utils.bin.enhanceEnv ( options );
@@ -39,8 +39,8 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
-  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
-  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
+  .option ( '--exclude, -e <glob>', 'Exclude repositories matching this glob' )
+  .option ( '--include, -i <glob>', 'Include only repositories matching this glob' )
   .argument ( '<repository>', 'The repository to CD into' )
   .action ( ( options, args ) => {
     Utils.bin.enhanceEnv ( options );
@@ -59,11 +59,11 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
-  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
-  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
-  .option ( '-j, --json', 'Output repositories as JSON' )
-  .option ( '-m, --minimal', 'Include only minimal, quick to retrieve, data for each repository' )
-  .option ( '-u, --user <username>', 'List remote repositories for this user or organization' )
+  .option ( '--exclude, -e <glob>', 'Exclude repositories matching this glob' )
+  .option ( '--include, -i <glob>', 'Include only repositories matching this glob' )
+  .option ( '--json, -j', 'Output repositories as JSON' )
+  .option ( '--minimal, -m', 'Include only minimal, quick to retrieve, data for each repository' )
+  .option ( '--user, -u <username>', 'List remote repositories for this user or organization' )
   .action ( options => {
     Utils.bin.enhanceEnv ( options );
     const {user, json, minimal, ...filter} = options;
@@ -77,8 +77,8 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
-  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
-  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
+  .option ( '--exclude, -e <glob>', 'Exclude repositories matching this glob' )
+  .option ( '--include, -i <glob>', 'Include only repositories matching this glob' )
   .argument ( '<repository>', 'The repository to CD into' )
   .action ( ( options, args ) => {
     Utils.bin.enhanceEnv ( options );
@@ -100,9 +100,9 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
   .option ( '--no-successes', 'Ignore successful commands', { default: undefined } )
-  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
-  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
-  .option ( '-j, --json', 'Output the results as JSON' )
+  .option ( '--exclude, -e <glob>', 'Exclude repositories matching this glob' )
+  .option ( '--include, -i <glob>', 'Include only repositories matching this glob' )
+  .option ( '--json, -j', 'Output the results as JSON' )
   .option ( '--sort', 'Output the results in a sorted order' )
   .argument ( '<command>', 'The shell command to execute' )
   .action ( ( options, commands ) => {
@@ -117,8 +117,8 @@ bin ( 'gitman', 'A simple yet powerful opinionated tool for managing GitHub repo
   .option ( '--no-forks', 'Ignore forked repositories', { default: undefined } )
   .option ( '--no-private', 'Ignore private repositories', { default: undefined } )
   .option ( '--no-public', 'Ignore public repositories', { default: undefined } )
-  .option ( '-e, --exclude <glob>', 'Exclude repositories matching this glob' )
-  .option ( '-i, --include <glob>', 'Include only repositories matching this glob' )
+  .option ( '--exclude, -e <glob>', 'Exclude repositories matching this glob' )
+  .option ( '--include, -i <glob>', 'Include only repositories matching this glob' )
   .argument ( '<repository>', 'The repository to CD into' )
   .action ( ( options, args ) => {
     Utils.bin.enhanceEnv ( options );

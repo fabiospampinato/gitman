@@ -11,7 +11,7 @@ A simple yet powerful opinionated tool for managing GitHub repositories.
 
 - **Simple**: There's almost nothing to configure and very few commands are provided.
 - **Powerful**: It allows you to clone in bulk repositories easily and execute commands on them.
-- **Tiny**: The entire thing is ~40kb min+gzipped, and only dependencies I personally maintain are used.
+- **Tiny**: The entire thing is ~50kb, and only dependencies I personally maintain are used.
 - **Beautiful**: All of its power derives from being opinioned about the folder structure where repositories are cloned.
 
 ## Install

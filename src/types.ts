@@ -3,7 +3,7 @@
 
 type IEnv = {
   githubToken?: string,
-  root?: string,
+  root?: string
 };
 
 type IFilter = {
